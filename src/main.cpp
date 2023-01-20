@@ -1,13 +1,23 @@
 #include "ofMain.h"
-#include "ofApp.h"
+#include "application.h"
 
-//========================================================================
-int main( ){
-	ofSetupOpenGL(1024,768,OF_WINDOW);			// <-------- setup the GL context
+int main()
+{
+  // paramètres du contexte de rendu OpenGL
+  ofGLFWWindowSettings windowSettings;
 
-	// this kicks off the running of my app
-	// can be OF_WINDOW or OF_FULLSCREEN
-	// pass in width and height too:
-	ofRunApp(new ofApp());
+  // option de redimentionnement de la fenêtre d'affichage
+  windowSettings.resizable = true;
+
+  // sélection de la version de OpenGL
+  windowSettings.setGLVersion(4, 6);
+
+  // création de la fenêtre
+  ofCreateWindow(windowSettings);
+
+  Application* application = new Application();
+
+  // démarrer l'exécution de l'application
+  ofRunApp(application);
 
 }
