@@ -2,9 +2,13 @@
 #include "histogramComponent.h"
 
 ofxDatGui* filesGui;
+ofxDatGuiFolder* filesFolder;
 ofxDatGui* toolsGui;
 ofxDatGuiLabel* headerLabel;
 HistogramComponent* histogram;
+ofxDatGuiSlider* redChannelSlider;
+ofxDatGuiSlider* greenChannelSlider;
+ofxDatGuiSlider* blueChannelSlider;
 
 void Application::setup()
 {
@@ -20,7 +24,7 @@ void Application::setup()
     filesGui = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
     filesGui->setWidth(60);
 
-    ofxDatGuiFolder* filesFolder = filesGui->addFolder("Files", ofColor::black);
+    filesFolder = filesGui->addFolder("Files", ofColor::black);
     ofxDatGuiButton* importBtn = filesFolder->addButton("Import");
     importBtn->setBackgroundColor(ofColor::darkGrey);
     ofxDatGuiButton* exportBtn = filesFolder->addButton("Export");
@@ -32,20 +36,26 @@ void Application::setup()
     toolsGui = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
     toolsGui->setPosition(0, headerGui->getHeight()-3);
     toolsGui->setWidth(256);
-    ofxDatGuiSlider* luminositySlider = toolsGui->addSlider("Luminosity", 0, 100);
 
     ofxDatGuiFolder* channelSliderFolder = toolsGui->addFolder("Channels", ofColor::black);
-    ofxDatGuiSlider* redChannelSlider = channelSliderFolder->addSlider("Red", 0, 256);
+    redChannelSlider = channelSliderFolder->addSlider("Red", 0, 255, 255);
+    redChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.redIntensity = redChannelSlider->getValue(); });
+    greenChannelSlider = channelSliderFolder->addSlider("Green", 0, 255, 255);
+    greenChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.greenIntensity = greenChannelSlider->getValue(); });
+    blueChannelSlider = channelSliderFolder->addSlider("Blue", 0, 255, 255);
+    blueChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.blueIntensity = blueChannelSlider->getValue(); });
 
     histogram = new HistogramComponent("Histogram", ofColor::black);
     toolsGui->addFolder(histogram);
 
+    renderer.offsetX = toolsGui->getWidth();
+    renderer.offsetY = headerGui->getHeight();
     renderer.setup();
 }
 
-// fonction appelée à chaque mise à jour du rendu graphique de l'application
 void Application::draw()
 {
+
   renderer.draw();
 }
 
@@ -55,7 +65,6 @@ void Application::windowResized(int w, int h)
     headerLabel->setWidth(ofGetWidth());
 }
 
-// fonction invoquée quand une sélection de fichiers est déposée sur la fenêtre de l'application
 void Application::dragEvent(ofDragInfo dragInfo)
 {
     ofLog() << "<app::ofDragInfo file[0]: " << dragInfo.files.at(0)
@@ -64,19 +73,21 @@ void Application::dragEvent(ofDragInfo dragInfo)
     renderer.image.load(dragInfo.files.at(0));
 }
 
-// fonction appelée quand une touche du clavier est relachée
 void Application::keyReleased(int key)
 {
   ofLog() << "<app::keyReleased: " << key << ">";
 }
 
-// fonction appelée quand un bouton d'un périphérique de pointage est relâché
+void Application::mousePressed(int x, int y, int button)
+{
+    ofLog() << "<app::mouse pressed at: (" << x << ", " << y << ")>";
+}
+
 void Application::mouseReleased(int x, int y, int button)
 {
   ofLog() << "<app::mouse released at: (" << x << ", " << y << ")>";
 }
 
-// fonction appelée juste avant de quitter l'application
 void Application::exit()
 {
   ofLog() << "<app::exit>";
@@ -84,13 +95,13 @@ void Application::exit()
 
 void Application::onImportEvent(ofxDatGuiButtonEvent e) {
     ofLog() << "<app::import>";
+    filesFolder->collapse();
     ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
     if (openFileResult.bSuccess) {
        ofImage image;
        image.load(openFileResult.getPath());
        renderer.image = image;
        calculateHistogramData();
-       //ofSetWindowShape(image.getWidth(), image.getHeight());
        ofLog() << "<app::import - success>";
     }
     else {
@@ -101,7 +112,7 @@ void Application::onImportEvent(ofxDatGuiButtonEvent e) {
 void Application::onExportEvent(ofxDatGuiButtonEvent e) 
 {
     ofLog() << "<app::export>";
-
+    filesFolder->collapse();
 }
 
 void Application::calculateHistogramData()
