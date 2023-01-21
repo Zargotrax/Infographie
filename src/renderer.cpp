@@ -2,10 +2,12 @@
 
 void Renderer::setup()
 {
-
+	ofBackground(100, 100, 100);
 }
 
 void Renderer::draw()
 {
-	image.draw(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+	if (image.isAllocated()) {
+        image.draw(0, 0);// , ofGetWindowWidth(), ofGetWindowHeight());
+	}
 }

@@ -52,9 +52,8 @@
     <ClCompile Include="src\application.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\application\image.cpp">
-      <Filter>src\application\image</Filter>
-    </ClCompile>
+    <ClCompile Include="src\histogramComponent.h" />
+    <ClCompile Include="src\histogramComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -205,9 +204,6 @@
     </ClInclude>
     <ClInclude Include="src\application.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\application\image.h">
-      <Filter>src\application\image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

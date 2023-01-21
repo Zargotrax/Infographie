@@ -24,4 +24,5 @@ public:
 
   void onImportEvent(ofxDatGuiButtonEvent e);
   void onExportEvent(ofxDatGuiButtonEvent e);
+  void calculateHistogramData();
 };

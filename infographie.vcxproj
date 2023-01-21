@@ -181,6 +181,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\histogramComponent.cpp" />
+    <ClCompile Include="src\histogramComponent.h" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.cpp" />
     <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.cpp" />
