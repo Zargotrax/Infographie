@@ -7,6 +7,7 @@ class Application : public ofBaseApp
 public:
 
   Renderer renderer;
+  std::map<string, ofImage> images;
 
   void setup();
 
@@ -24,7 +25,10 @@ public:
 
   void exit();
 
+  void import(string path);
   void onImportEvent(ofxDatGuiButtonEvent e);
   void onExportEvent(ofxDatGuiButtonEvent e);
   void calculateHistogramData();
+  void onImageSelection(ofxDatGuiButtonEvent e);
+
 };

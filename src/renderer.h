@@ -5,11 +5,9 @@ class Renderer
 public:
 
 	ofImage image;
+	ofColor color;
 	int offsetX = 0;
 	int offsetY = 0;
-	int redIntensity = 255;
-	int greenIntensity = 255;
-	int blueIntensity = 255;
 
 	void setup();
 

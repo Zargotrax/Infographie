@@ -8,7 +8,7 @@ void Renderer::setup()
 void Renderer::draw()
 {
 	if (image.isAllocated()) {
-		ofSetColor(redIntensity, greenIntensity, blueIntensity, 255);
+		ofSetColor(color);
         image.draw(offsetX, offsetY);
 		ofSetColor(255, 255, 255, 255);
 	}

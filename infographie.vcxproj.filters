@@ -4,56 +4,57 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\application.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.cpp">
-      <Filter>addons\ofxDatGui\src\core</Filter>
+    <ClCompile Include="src\histogramComponent.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.cpp">
-      <Filter>addons\ofxDatGui\src\libs\ofxSmartFont</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\ofxDatGui.cpp">
-      <Filter>addons\ofxDatGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxButton.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxColorPicker.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiGroup.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxLabel.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxPanel.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSlider.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSliderGroup.cpp">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxToggle.cpp">
-      <Filter>addons\ofxGui\src</Filter>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\application.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.cpp">
+      <Filter>addons\ofxDatGui\src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\histogramComponent.h" />
-    <ClCompile Include="src\histogramComponent.cpp" />
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.cpp">
+      <Filter>addons\ofxDatGui\src\libs\ofxSmartFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\ofxDatGui.cpp">
+      <Filter>addons\ofxDatGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxButton.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxColorPicker.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiGroup.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxLabel.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxPanel.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSlider.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSliderGroup.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxToggle.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -89,127 +90,118 @@
     <Filter Include="addons\ofxGui\src">
       <UniqueIdentifier>{645E9533-4DCD-6179-1CDF-CB65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ui">
-      <UniqueIdentifier>{7912fdb0-643f-4145-a91c-9cf6b92f1c90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\application">
-      <UniqueIdentifier>{658dd0d6-f250-473a-911c-11a5b56bc6a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\application\image">
-      <UniqueIdentifier>{e6430177-b8e2-4196-9411-0d77fd1247ef}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGui2dPad.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
+    <ClInclude Include="src\application.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiButton.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiColorPicker.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiControls.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiFRM.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiGroups.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiLabel.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiMatrix.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiScrollView.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiSlider.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTextInput.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTextInputField.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTimeGraph.h">
-      <Filter>addons\ofxDatGui\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.h">
-      <Filter>addons\ofxDatGui\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiConstants.h">
-      <Filter>addons\ofxDatGui\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiEvents.h">
-      <Filter>addons\ofxDatGui\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiIntObject.h">
-      <Filter>addons\ofxDatGui\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.h">
-      <Filter>addons\ofxDatGui\src\libs\ofxSmartFont</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\ofxDatGui.h">
-      <Filter>addons\ofxDatGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\themes\ofxDatGuiTheme.h">
-      <Filter>addons\ofxDatGui\src\themes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\themes\ofxDatGuiThemes.h">
-      <Filter>addons\ofxDatGui\src\themes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxBaseGui.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxButton.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxColorPicker.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGui.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiGroup.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiUtils.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxLabel.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxPanel.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSlider.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSliderGroup.h">
-      <Filter>addons\ofxGui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxToggle.h">
-      <Filter>addons\ofxGui\src</Filter>
+    <ClInclude Include="src\histogramComponent.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\application.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGui2dPad.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiButton.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiColorPicker.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiControls.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiFRM.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiGroups.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiLabel.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiMatrix.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiScrollView.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiSlider.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTextInput.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTextInputField.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiTimeGraph.h">
+      <Filter>addons\ofxDatGui\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.h">
+      <Filter>addons\ofxDatGui\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiConstants.h">
+      <Filter>addons\ofxDatGui\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiEvents.h">
+      <Filter>addons\ofxDatGui\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiIntObject.h">
+      <Filter>addons\ofxDatGui\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.h">
+      <Filter>addons\ofxDatGui\src\libs\ofxSmartFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\ofxDatGui.h">
+      <Filter>addons\ofxDatGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\themes\ofxDatGuiTheme.h">
+      <Filter>addons\ofxDatGui\src\themes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\themes\ofxDatGuiThemes.h">
+      <Filter>addons\ofxDatGui\src\themes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxBaseGui.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxButton.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxColorPicker.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGui.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiGroup.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxGuiUtils.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxLabel.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxPanel.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSlider.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxSliderGroup.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxToggle.h">
+      <Filter>addons\ofxGui\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\IFT3100H23-master\module01\EX03\IFT3100H23_ImageImport\bin\data\teapot.jpg" />
   </ItemGroup>
 </Project>

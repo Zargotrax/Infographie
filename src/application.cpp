@@ -4,11 +4,16 @@
 ofxDatGui* filesGui;
 ofxDatGuiFolder* filesFolder;
 ofxDatGui* toolsGui;
+ofxDatGui* headerGui;
 ofxDatGuiLabel* headerLabel;
+ofxDatGui* imagesGui;
 HistogramComponent* histogram;
 ofxDatGuiSlider* redChannelSlider;
 ofxDatGuiSlider* greenChannelSlider;
 ofxDatGuiSlider* blueChannelSlider;
+ofxDatGuiSlider* hueSlider;
+ofxDatGuiSlider* saturationSlider;
+ofxDatGuiSlider* brightnessSlider;
 
 void Application::setup()
 {
@@ -16,7 +21,7 @@ void Application::setup()
 
     ofSetWindowTitle("Projet Infographie");
 
-    ofxDatGui* headerGui = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
+    headerGui = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
     headerLabel = headerGui->addLabel("Projet Infographie");
     headerLabel->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     headerLabel->setWidth(ofGetWidth());
@@ -34,19 +39,49 @@ void Application::setup()
     exportBtn->onButtonEvent(this, &Application::onExportEvent);
 
     toolsGui = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
-    toolsGui->setPosition(0, headerGui->getHeight()-3);
+    toolsGui->setPosition(0, headerGui->getHeight()-1);
     toolsGui->setWidth(256);
 
-    ofxDatGuiFolder* channelSliderFolder = toolsGui->addFolder("Channels", ofColor::black);
-    redChannelSlider = channelSliderFolder->addSlider("Red", 0, 255, 255);
-    redChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.redIntensity = redChannelSlider->getValue(); });
-    greenChannelSlider = channelSliderFolder->addSlider("Green", 0, 255, 255);
-    greenChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.greenIntensity = greenChannelSlider->getValue(); });
-    blueChannelSlider = channelSliderFolder->addSlider("Blue", 0, 255, 255);
-    blueChannelSlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { renderer.blueIntensity = blueChannelSlider->getValue(); });
+    ofxDatGuiFolder* rgbSliderFolder = toolsGui->addFolder("RGB", ofColor::black);
+    redChannelSlider = rgbSliderFolder->addSlider("Red", 0, 255, 255);
+    greenChannelSlider = rgbSliderFolder->addSlider("Green", 0, 255, 255);
+    blueChannelSlider = rgbSliderFolder->addSlider("Blue", 0, 255, 255);
+
+    auto rgbColorUpdate = [&](ofxDatGuiSliderEvent e)
+    {
+        renderer.color = ofColor::ofColor_(redChannelSlider->getValue(), greenChannelSlider->getValue(), blueChannelSlider->getValue());
+        hueSlider->setValue(renderer.color.getHue());
+        saturationSlider->setValue(renderer.color.getSaturation());
+        brightnessSlider->setValue(renderer.color.getBrightness());
+    };
+
+    redChannelSlider->onSliderEvent(rgbColorUpdate);
+    greenChannelSlider->onSliderEvent(rgbColorUpdate);
+    blueChannelSlider->onSliderEvent(rgbColorUpdate);
+
+    ofxDatGuiFolder* hsbSliderFolder = toolsGui->addFolder("HSB", ofColor::black);
+    hueSlider = hsbSliderFolder->addSlider("Hue", 0, 360, 360);
+    saturationSlider = hsbSliderFolder->addSlider("Saturation", 0, 100, 100);
+    brightnessSlider = hsbSliderFolder->addSlider("Brightness", 0, 100, 100);
+
+    auto hsbColorUpdate = [&](ofxDatGuiSliderEvent e)
+    {
+        renderer.color = ofColor::fromHsb(hueSlider->getValue(), saturationSlider->getValue(), brightnessSlider->getValue());
+        redChannelSlider->setValue(renderer.color.r);
+        greenChannelSlider->setValue(renderer.color.g);
+        blueChannelSlider->setValue(renderer.color.b);
+    };
+
+    hueSlider->onSliderEvent(hsbColorUpdate);
+    saturationSlider->onSliderEvent(hsbColorUpdate);
+    brightnessSlider->onSliderEvent(hsbColorUpdate);
 
     histogram = new HistogramComponent("Histogram", ofColor::black);
     toolsGui->addFolder(histogram);
+
+    imagesGui = new ofxDatGui(ofxDatGuiAnchor::TOP_RIGHT);
+    imagesGui->setWidth(255);
+    imagesGui->setPosition(ofGetWidth()-255, headerGui->getHeight()-1);
 
     renderer.offsetX = toolsGui->getWidth();
     renderer.offsetY = headerGui->getHeight();
@@ -55,7 +90,6 @@ void Application::setup()
 
 void Application::draw()
 {
-
   renderer.draw();
 }
 
@@ -70,7 +104,7 @@ void Application::dragEvent(ofDragInfo dragInfo)
     ofLog() << "<app::ofDragInfo file[0]: " << dragInfo.files.at(0)
         << " at : " << dragInfo.position << ">";
 
-    renderer.image.load(dragInfo.files.at(0));
+    import(dragInfo.files.at(0));
 }
 
 void Application::keyReleased(int key)
@@ -98,15 +132,30 @@ void Application::onImportEvent(ofxDatGuiButtonEvent e) {
     filesFolder->collapse();
     ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
     if (openFileResult.bSuccess) {
-       ofImage image;
-       image.load(openFileResult.getPath());
-       renderer.image = image;
-       calculateHistogramData();
+        import(openFileResult.getPath());
        ofLog() << "<app::import - success>";
     }
     else {
         ofLog() << "<app::import - failed>";
     }
+}
+
+void Application::import(string path) {
+    ofImage image;
+    image.load(path);
+
+    std::string fileName;
+    std::string::size_type idx = path.rfind('\\');
+    if (idx != std::string::npos) {
+        fileName = path.substr(idx + 1);
+    }
+
+    ofxDatGuiButton* button = imagesGui->addButton(fileName);
+    button->onButtonEvent(this, &Application::onImageSelection);
+    images.insert({ fileName, image });
+
+    renderer.image = image;
+    calculateHistogramData();
 }
 
 void Application::onExportEvent(ofxDatGuiButtonEvent e) 
@@ -143,5 +192,10 @@ void Application::calculateHistogramData()
     histogram->setRedHist(redHist);
     histogram->setGreenHist(greenHist);
     histogram->setBlueHist(blueHist);
+}
 
+void Application::onImageSelection(ofxDatGuiButtonEvent e) {
+    ofImage image = images.at(e.target->getLabel());
+    renderer.image = image;
+    calculateHistogramData();
 }
