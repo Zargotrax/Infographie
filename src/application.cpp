@@ -1,6 +1,9 @@
 #include "application.h"
 #include "histogramComponent.h"
 
+ofPoint position;
+bool isDragging;
+
 ofxDatGui* filesGui;
 ofxDatGuiFolder* filesFolder;
 ofxDatGui* toolsGui;
@@ -14,6 +17,7 @@ ofxDatGuiSlider* blueChannelSlider;
 ofxDatGuiSlider* hueSlider;
 ofxDatGuiSlider* saturationSlider;
 ofxDatGuiSlider* brightnessSlider;
+ofxDatGuiSlider* opacitySlider;
 
 void Application::setup()
 {
@@ -76,21 +80,42 @@ void Application::setup()
     saturationSlider->onSliderEvent(hsbColorUpdate);
     brightnessSlider->onSliderEvent(hsbColorUpdate);
 
+    opacitySlider = toolsGui->addSlider("Opacity", 0, 100, 100);
+    opacitySlider->onSliderEvent([&](ofxDatGuiSliderEvent e) { 
+        if (renderer.activeImage != nullptr) 
+            renderer.activeImage->opacity = opacitySlider->getValue() * 2.55;
+    });
+
+    ofxDatGuiButton* rotateBtn = toolsGui->addButton("Rotate");
+    rotateBtn->onButtonEvent([&](ofxDatGuiButtonEvent e) {
+        if (renderer.activeImage != nullptr)
+            renderer.activeImage->imageData.rotate90(1);
+    });
+
     histogram = new HistogramComponent("Histogram", ofColor::black);
     toolsGui->addFolder(histogram);
 
     imagesGui = new ofxDatGui(ofxDatGuiAnchor::TOP_RIGHT);
     imagesGui->setWidth(255);
     imagesGui->setPosition(ofGetWidth()-255, headerGui->getHeight()-1);
+    imagesGui->addLabel("Images : ");
 
-    renderer.offsetX = toolsGui->getWidth();
-    renderer.offsetY = headerGui->getHeight();
+    renderer.offsetX1 = toolsGui->getWidth();
+    renderer.offsetY2 = headerGui->getHeight();
+    renderer.offsetX2 = ofGetWidth() - 225;
     renderer.setup();
 }
 
 void Application::draw()
 {
   renderer.draw();
+}
+
+void Application::update() {
+    if (isDragging) {
+        renderer.activeImage->coordinates.x = ofGetMouseX();
+        renderer.activeImage->coordinates.y = ofGetMouseY();
+    }
 }
 
 void Application::windowResized(int w, int h)
@@ -115,11 +140,15 @@ void Application::keyReleased(int key)
 void Application::mousePressed(int x, int y, int button)
 {
     ofLog() << "<app::mouse pressed at: (" << x << ", " << y << ")>";
+
+    //if(renderer.activeImage->imageData.)
+    isDragging = true;
 }
 
 void Application::mouseReleased(int x, int y, int button)
 {
-  ofLog() << "<app::mouse released at: (" << x << ", " << y << ")>";
+    ofLog() << "<app::mouse released at: (" << x << ", " << y << ")>";
+    isDragging = false;
 }
 
 void Application::exit()
@@ -141,8 +170,8 @@ void Application::onImportEvent(ofxDatGuiButtonEvent e) {
 }
 
 void Application::import(string path) {
-    ofImage image;
-    image.load(path);
+    ofImage imageData;
+    imageData.load(path);
 
     std::string fileName;
     std::string::size_type idx = path.rfind('\\');
@@ -152,9 +181,15 @@ void Application::import(string path) {
 
     ofxDatGuiButton* button = imagesGui->addButton(fileName);
     button->onButtonEvent(this, &Application::onImageSelection);
-    images.insert({ fileName, image });
 
-    renderer.image = image;
+    Image* image = new Image();
+    image->imageData = imageData;
+
+   
+
+    renderer.images.insert({ fileName, image });
+
+    renderer.activeImage = image;
     calculateHistogramData();
 }
 
@@ -162,13 +197,16 @@ void Application::onExportEvent(ofxDatGuiButtonEvent e)
 {
     ofLog() << "<app::export>";
     filesFolder->collapse();
+    ofImage image;
+    image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    image.save("render.png");
 }
 
 void Application::calculateHistogramData()
 {
     ofLog() << "<app::calculateHistogramData>";
 
-    ofImage img = renderer.image;
+    ofImage img = renderer.activeImage->imageData;
     ofPixels pixels = img.getPixels();
 
     int width = img.getWidth();
@@ -195,7 +233,7 @@ void Application::calculateHistogramData()
 }
 
 void Application::onImageSelection(ofxDatGuiButtonEvent e) {
-    ofImage image = images.at(e.target->getLabel());
-    renderer.image = image;
+    Image* image = renderer.images.at(e.target->getLabel());
+    renderer.activeImage = image;
     calculateHistogramData();
 }

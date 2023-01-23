@@ -7,11 +7,12 @@ class Application : public ofBaseApp
 public:
 
   Renderer renderer;
-  std::map<string, ofImage> images;
 
   void setup();
 
   void draw();
+
+  void update();
 
   void keyReleased(int key);
 

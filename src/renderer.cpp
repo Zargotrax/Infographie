@@ -7,9 +7,13 @@ void Renderer::setup()
 
 void Renderer::draw()
 {
-	if (image.isAllocated()) {
-		ofSetColor(color);
-        image.draw(offsetX, offsetY);
-		ofSetColor(255, 255, 255, 255);
+	for (std::pair<const string, Image*>& pair : Renderer::images) {
+		Image* image = pair.second;
+		if (image->imageData.isAllocated()) {
+			ofSetColor(color.r, color.g, color.b, image->opacity);
+			image->imageData.draw(image->coordinates.x + offsetX1, image->coordinates.y + offsetY2);
+			ofSetColor(255, 255, 255, 255);
+		}
 	}
+
 }
