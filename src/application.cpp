@@ -3,13 +3,15 @@
 
 ofPoint position;
 bool isDragging;
+ofPoint dragStart = {0, 0, 0};
+ofPoint originalImagePosition = { 0, 0, 0 };
 
 ofxDatGui* filesGui;
 ofxDatGuiFolder* filesFolder;
 ofxDatGui* toolsGui;
 ofxDatGui* headerGui;
 ofxDatGuiLabel* headerLabel;
-ofxDatGui* imagesGui;
+ofxDatGuiScrollView* imgScrollView;
 HistogramComponent* histogram;
 ofxDatGuiSlider* redChannelSlider;
 ofxDatGuiSlider* greenChannelSlider;
@@ -92,36 +94,62 @@ void Application::setup()
             renderer.activeImage->imageData.rotate90(1);
     });
 
+    ofxDatGuiButton* removeBtn = toolsGui->addButton("Remove");
+    removeBtn->onButtonEvent([&](ofxDatGuiButtonEvent e) {
+        if (renderer.activeImage != nullptr) {
+            renderer.images.erase(renderer.images.begin() + renderer.activeImageIndex);
+            imgScrollView->remove(renderer.activeImageIndex);
+            if (renderer.images.size() > 0) {
+                renderer.activeImage = renderer.images.at(0);
+                renderer.activeImageIndex = 0;
+            }
+            else {
+                renderer.activeImage = nullptr;
+                renderer.activeImageIndex = -1;
+            }
+        }
+    });
+
     histogram = new HistogramComponent("Histogram", ofColor::black);
     toolsGui->addFolder(histogram);
 
-    imagesGui = new ofxDatGui(ofxDatGuiAnchor::TOP_RIGHT);
-    imagesGui->setWidth(255);
-    imagesGui->setPosition(ofGetWidth()-255, headerGui->getHeight()-1);
-    imagesGui->addLabel("Images : ");
+    imgScrollView = new ofxDatGuiScrollView("My scroll vierw", 100);
+    imgScrollView->setWidth(255);
+    imgScrollView->setPosition(ofGetWidth() - 255, headerGui->getHeight() - 1);
+    imgScrollView->setHeight(ofGetHeight());
+    imgScrollView->onScrollViewEvent(this, &Application::onImageSelection);
 
     renderer.offsetX1 = toolsGui->getWidth();
-    renderer.offsetY2 = headerGui->getHeight();
+    renderer.offsetY1 = headerGui->getHeight();
     renderer.offsetX2 = ofGetWidth() - 225;
+    renderer.offsetY2 = ofGetHeight();
     renderer.setup();
 }
 
 void Application::draw()
 {
-  renderer.draw();
+    renderer.draw();
+    imgScrollView->draw();
 }
 
 void Application::update() {
-    if (isDragging) {
-        renderer.activeImage->coordinates.x = ofGetMouseX();
-        renderer.activeImage->coordinates.y = ofGetMouseY();
+    imgScrollView->update();
+    if (isDragging && renderer.activeImage != nullptr) {
+        //renderer.activeImage->coordinates.x = ofGetMouseX() - renderer.offsetX1 - (renderer.activeImage->imageData.getHeight()/2);
+        //renderer.activeImage->coordinates.y = ofGetMouseY() - renderer.offsetY1 - (renderer.activeImage->imageData.getWidth()/2);
+        renderer.activeImage->coordinates.x = ofGetMouseX() - dragStart.x + originalImagePosition.x;
+        renderer.activeImage->coordinates.y = ofGetMouseY() - dragStart.y + originalImagePosition.y;
     }
 }
 
 void Application::windowResized(int w, int h)
 {
     ofLog() << "<app::windowResized to: (" << w << ", " << h << ")>";
+    renderer.offsetX2 = ofGetWidth() - 225;
+    renderer.offsetY2 = ofGetHeight();
     headerLabel->setWidth(ofGetWidth());
+    imgScrollView->setPosition(ofGetWidth() - 255, headerGui->getHeight() - 1);
+    imgScrollView->setHeight(ofGetHeight());
 }
 
 void Application::dragEvent(ofDragInfo dragInfo)
@@ -140,9 +168,15 @@ void Application::keyReleased(int key)
 void Application::mousePressed(int x, int y, int button)
 {
     ofLog() << "<app::mouse pressed at: (" << x << ", " << y << ")>";
+    ofLog() << "<app::dragging is true" << renderer.offsetX1 << ":" << renderer.offsetX2 << ":" << renderer.offsetY1 << ";" << renderer.offsetY2;
 
-    //if(renderer.activeImage->imageData.)
-    isDragging = true;
+    if (renderer.activeImage != nullptr) {
+        if (x > renderer.offsetX1 && x < renderer.offsetX2 && y > renderer.offsetY1 && y < renderer.offsetY2) {
+            isDragging = true;
+            dragStart = { static_cast<float>(x), static_cast<float>(y), 0 };
+            originalImagePosition = { renderer.activeImage->coordinates.x, renderer.activeImage->coordinates.y, 0 };
+        }
+    }
 }
 
 void Application::mouseReleased(int x, int y, int button)
@@ -179,17 +213,29 @@ void Application::import(string path) {
         fileName = path.substr(idx + 1);
     }
 
-    ofxDatGuiButton* button = imagesGui->addButton(fileName);
-    button->onButtonEvent(this, &Application::onImageSelection);
-
     Image* image = new Image();
     image->imageData = imageData;
+    image->originalName = fileName;
+    image->path = path;
 
-   
+    int duplicate = 0;
+    for (Image* image : renderer.images) {
+        if (image->originalName == fileName) {
+            duplicate++;
+        }
+    }
 
-    renderer.images.insert({ fileName, image });
+    if (duplicate > 0) {
+        fileName = fileName + " (" + std::to_string(duplicate) + ")";
+    }
 
+    imgScrollView->add(fileName);
+
+    image->name = fileName;
+
+    renderer.images.push_back(image);
     renderer.activeImage = image;
+    renderer.activeImageIndex++;
     calculateHistogramData();
 }
 
@@ -232,8 +278,9 @@ void Application::calculateHistogramData()
     histogram->setBlueHist(blueHist);
 }
 
-void Application::onImageSelection(ofxDatGuiButtonEvent e) {
-    Image* image = renderer.images.at(e.target->getLabel());
-    renderer.activeImage = image;
+void Application::onImageSelection(ofxDatGuiScrollViewEvent e) {
+    ofLog() << "<app::selecting image : at index " << e.target->getIndex() << ">";
+    renderer.activeImage = renderer.images.at(e.target->getIndex());
+    renderer.activeImageIndex = e.target->getIndex();
     calculateHistogramData();
 }

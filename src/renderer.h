@@ -5,8 +5,9 @@ class Renderer
 {
 public:
 
-	std::map<string, Image*> images;
+	std::vector<Image*> images;
 	Image* activeImage;
+	int activeImageIndex = -1;
 	ofColor color;
 	int offsetX1 = 0;
 	int offsetY1 = 0;

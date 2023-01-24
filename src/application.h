@@ -30,6 +30,6 @@ public:
   void onImportEvent(ofxDatGuiButtonEvent e);
   void onExportEvent(ofxDatGuiButtonEvent e);
   void calculateHistogramData();
-  void onImageSelection(ofxDatGuiButtonEvent e);
+  void onImageSelection(ofxDatGuiScrollViewEvent e);
 
 };
