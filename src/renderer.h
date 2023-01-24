@@ -1,5 +1,5 @@
 #include "ofMain.h"
-#include "image.h"
+#include "./object/image.h"
 
 class Renderer
 {

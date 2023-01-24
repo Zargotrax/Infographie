@@ -26,10 +26,26 @@ public:
 
   void exit();
 
-  void import(string path);
   void onImportEvent(ofxDatGuiButtonEvent e);
+
   void onExportEvent(ofxDatGuiButtonEvent e);
-  void calculateHistogramData();
+
   void onImageSelection(ofxDatGuiScrollViewEvent e);
+
+  void onRgbSliderEvent(ofxDatGuiSliderEvent e);
+
+  void onHsbSliderEvent(ofxDatGuiSliderEvent e);
+
+  void onOpacitySliderEvent(ofxDatGuiSliderEvent e);
+
+  void onRotateEvent(ofxDatGuiButtonEvent e);
+
+  void onRemoveEvent(ofxDatGuiButtonEvent e);
+
+private:
+
+	void import(string path);
+
+	void calculateHistogramData();
 
 };

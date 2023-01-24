@@ -182,7 +182,7 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\histogramComponent.cpp" />
+    <ClCompile Include="src\ui\histogramComponent.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\core\ofxDatGuiComponent.cpp" />
     <ClCompile Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\libs\ofxSmartFont\ofxSmartFont.cpp" />
@@ -200,7 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
-    <ClInclude Include="src\histogramComponent.h" />
+    <ClInclude Include="src\ui\histogramComponent.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGui2dPad.h" />
     <ClInclude Include="..\Users\Marc-Antoine\Desktop\School\Infographie\TP\of_v0.11.2_vs2017_release\addons\ofxDatGui\src\components\ofxDatGuiButton.h" />
