@@ -7,12 +7,14 @@ void Renderer::setup()
 
 void Renderer::draw()
 {
-	for (Image*image : Renderer::images) {
-		if (image->imageData.isAllocated()) {
-			ofSetColor(color.r, color.g, color.b, image->opacity);
-			image->imageData.draw(image->coordinates.x + offsetX1, image->coordinates.y + offsetY1);
-			ofSetColor(255, 255, 255, 255);
-		}
+	for (TwoDimensionalObject* element : Renderer::elements) {
+		ofSetColor(color.r, color.g, color.b, element->opacity);
+		element->draw(offsetX1, offsetY1);
+		ofSetColor(255, 255, 255, 255);
 	}
+}
 
+bool Renderer::hitTest(int x, int y)
+{
+	return x > offsetX1 && x < offsetX2&& y > offsetY1 && y < offsetY2;
 }

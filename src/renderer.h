@@ -1,13 +1,13 @@
 #include "ofMain.h"
-#include "./object/image.h"
+#include "./object/drawable.h"
 
 class Renderer
 {
 public:
 
-	std::vector<Image*> images;
-	Image* activeImage;
-	int activeImageIndex = -1;
+	std::vector<TwoDimensionalObject*> elements;
+	TwoDimensionalObject* active;
+	int activeIndex = -1;
 	ofColor color;
 	int offsetX1 = 0;
 	int offsetY1 = 0;
@@ -17,5 +17,7 @@ public:
 	void setup();
 
 	void draw();
+
+	bool hitTest(int x, int y);
 
 };

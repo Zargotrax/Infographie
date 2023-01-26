@@ -1,6 +1,7 @@
 #include "ofxDatGui.h"
 
-class HistogramComponent : public ofxDatGuiFolder {
+class HistogramComponent : public ofxDatGuiFolder 
+{
 public:
 
     int redHist[256] = { 0 };

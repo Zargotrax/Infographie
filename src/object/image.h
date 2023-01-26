@@ -1,14 +1,13 @@
-#include "ofMain.h"
+#include "twoDimensionalObject.h"
 
-class Image 
+class Image : public TwoDimensionalObject 
 {
 public:
 
     ofImage imageData;
-    string name;
-    string originalName;
     string path;
-    ofPoint coordinates;
-    int opacity = 255;
 
+    void draw(int offsetX, int offsetY);
+
+    void rotate90();
 };

@@ -14,6 +14,8 @@ public:
 
   void update();
 
+  void keyPressed(int key);
+
   void keyReleased(int key);
 
   void mousePressed(int x, int y, int button);
@@ -42,10 +44,32 @@ public:
 
   void onRemoveEvent(ofxDatGuiButtonEvent e);
 
+  void onAddSquareEvent(ofxDatGuiButtonEvent e);
+
+  void onAddRectangleEvent(ofxDatGuiButtonEvent e);
+
+  void onAddCircleleEvent(ofxDatGuiButtonEvent e);
+
+  void onAddEllipsisEvent(ofxDatGuiButtonEvent e);
+
+  void onAddRegularPolygonEvent(ofxDatGuiButtonEvent e);
+
+  void onAddStarEvent(ofxDatGuiButtonEvent e);
+
+  void onAddAmongusEvent(ofxDatGuiButtonEvent e);
+
+  void onUpdateShape(ofxDatGuiSliderEvent e);
+
 private:
 
 	void import(string path);
 
 	void calculateHistogramData();
+
+	string getElementName(string filename);
+
+	bool guiHitTest(int x, int y);
+
+	void drawUI();
 
 };
