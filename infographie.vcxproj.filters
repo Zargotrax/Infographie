@@ -10,6 +10,9 @@
 		<ClCompile Include="src\main.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\object\arrow.cpp">
+			<Filter>src\object</Filter>
+		</ClCompile>
 		<ClCompile Include="src\object\circle.cpp">
 			<Filter>src\object</Filter>
 		</ClCompile>
@@ -23,6 +26,9 @@
 			<Filter>src\object</Filter>
 		</ClCompile>
 		<ClCompile Include="src\object\regularPolygon.cpp">
+			<Filter>src\object</Filter>
+		</ClCompile>
+		<ClCompile Include="src\object\shape.cpp">
 			<Filter>src\object</Filter>
 		</ClCompile>
 		<ClCompile Include="src\object\square.cpp">
@@ -128,10 +134,13 @@
 		<ClInclude Include="src\ofApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="src\object\amongus.h">
+		<ClInclude Include="src\object\arrow.h">
 			<Filter>src\object</Filter>
 		</ClInclude>
 		<ClInclude Include="src\object\circle.h">
+			<Filter>src\object</Filter>
+		</ClInclude>
+		<ClInclude Include="src\object\drawable.h">
 			<Filter>src\object</Filter>
 		</ClInclude>
 		<ClInclude Include="src\object\ellipsis.h">
@@ -146,7 +155,7 @@
 		<ClInclude Include="src\object\regularPolygon.h">
 			<Filter>src\object</Filter>
 		</ClInclude>
-		<ClInclude Include="src\object\shapes.h">
+		<ClInclude Include="src\object\shape.h">
 			<Filter>src\object</Filter>
 		</ClInclude>
 		<ClInclude Include="src\object\square.h">

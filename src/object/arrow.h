@@ -1,15 +1,15 @@
 #include "shape.h"
 
-class Star : public Shape
+class Arrow : public Shape
 {
 public:
 
-    float angleModifier = 0;
+    int angle = 0;
 
     void draw(int offsetX, int offsetY);
 
     void rotate90();
 
-    void drawStar(ofPoint center);
+    void Arrow::drawArrow(ofPoint position);
 
 };

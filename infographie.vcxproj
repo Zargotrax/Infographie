@@ -182,11 +182,13 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\object\arrow.cpp" />
     <ClCompile Include="src\object\circle.cpp" />
     <ClCompile Include="src\object\ellipsis.cpp" />
     <ClCompile Include="src\object\image.cpp" />
     <ClCompile Include="src\object\rectangle.cpp" />
     <ClCompile Include="src\object\regularPolygon.cpp" />
+    <ClCompile Include="src\object\shape.cpp" />
     <ClCompile Include="src\object\square.cpp" />
     <ClCompile Include="src\object\star.cpp" />
     <ClCompile Include="src\object\twoDimensionalObject.cpp" />
@@ -208,13 +210,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
-    <ClInclude Include="src\object\amongus.h" />
+    <ClInclude Include="src\object\arrow.h" />
     <ClInclude Include="src\object\circle.h" />
+    <ClInclude Include="src\object\drawable.h" />
     <ClInclude Include="src\object\ellipsis.h" />
     <ClInclude Include="src\object\image.h" />
     <ClInclude Include="src\object\rectangle.h" />
     <ClInclude Include="src\object\regularPolygon.h" />
-    <ClInclude Include="src\object\shapes.h" />
+    <ClInclude Include="src\object\shape.h" />
     <ClInclude Include="src\object\square.h" />
     <ClInclude Include="src\object\star.h" />
     <ClInclude Include="src\object\twoDimensionalObject.h" />

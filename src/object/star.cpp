@@ -1,7 +1,25 @@
 #include "star.h"
 
 void Star::draw(int offsetX, int offsetY) {
-    ofPoint center = { TwoDimensionalObject::coordinates.x + offsetX, TwoDimensionalObject::coordinates.y + offsetY, 0 };
+    ofPoint center = { TwoDimensionalObject::coordinates.x + (width / 2) + offsetX,
+                        TwoDimensionalObject::coordinates.y + (width / 2) + offsetY, 0 };
+
+    ofFill();
+    ofSetLineWidth(0);
+    ofSetColor(fillColor);
+    drawStar(center);
+
+    ofNoFill();
+    ofSetLineWidth(outlineThickness);
+    ofSetColor(outlineColor);
+    drawStar(center);
+}
+
+void Star::rotate90() {
+    angleModifier += PI / 2;
+}
+
+void Star::drawStar(ofPoint center) {
     float angle = TWO_PI / nbApex; // 72 degrees
     int radius = width / 2;
     int innerRadius = height / 2;
@@ -12,8 +30,4 @@ void Star::draw(int offsetX, int offsetY) {
         ofDrawTriangle(outer1, center, inner);
         ofDrawTriangle(outer2, center, inner);
     }
-}
-
-void Star::rotate90() {
-    angleModifier += PI / 2;
 }

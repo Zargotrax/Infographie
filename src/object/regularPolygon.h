@@ -9,4 +9,6 @@ public:
     void draw(int offsetX, int offsetY);
 
     void rotate90();
+
+    void drawPolygon(ofPoint center);
 };

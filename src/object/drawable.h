@@ -7,4 +7,4 @@
 #include "regularPolygon.h"
 
 #include "star.h"
-#include "amongus.h"
+#include "arrow.h"

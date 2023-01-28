@@ -5,6 +5,14 @@ void RectangleShape::draw(int offsetX, int offsetY) {
     position.x = TwoDimensionalObject::coordinates.x + offsetX;
     position.y = TwoDimensionalObject::coordinates.y + offsetY;
 
+    ofFill();
+    ofSetLineWidth(0);
+    ofSetColor(fillColor);
+    ofDrawRectangle(position, width, height);
+
+    ofNoFill();
+    ofSetLineWidth(outlineThickness);
+    ofSetColor(outlineColor);
     ofDrawRectangle(position, width, height);
 }
 

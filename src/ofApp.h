@@ -56,9 +56,13 @@ public:
 
   void onAddStarEvent(ofxDatGuiButtonEvent e);
 
-  void onAddAmongusEvent(ofxDatGuiButtonEvent e);
+  void onAddArrowEvent(ofxDatGuiButtonEvent e);
 
-  void onUpdateShape(ofxDatGuiSliderEvent e);
+  void onUpdateShapeSliderEvent(ofxDatGuiSliderEvent e);
+
+  void onUpdateShapeColorPickerEvent(ofxDatGuiColorPickerEvent e);
+
+  void onBgColorChangeEvent(ofxDatGuiColorPickerEvent e);
 
 private:
 
@@ -72,4 +76,9 @@ private:
 
 	void drawUI();
 
+	void addElementToRenderer(TwoDimensionalObject* object);
+
+	void removeCurrentSelectedObject();
+
+	void updateShapeFromUi();
 };
