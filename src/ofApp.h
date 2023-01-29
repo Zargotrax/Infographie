@@ -62,6 +62,8 @@ public:
 
   void onUpdateShapeColorPickerEvent(ofxDatGuiColorPickerEvent e);
 
+  void onUpdateShapeToggleEvent(ofxDatGuiToggleEvent e);
+
   void onBgColorChangeEvent(ofxDatGuiColorPickerEvent e);
 
 private:
@@ -81,4 +83,6 @@ private:
 	void removeCurrentSelectedObject();
 
 	void updateShapeFromUi();
+
+	void updateUiFromShape();
 };

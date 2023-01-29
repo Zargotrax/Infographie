@@ -12,7 +12,7 @@ public:
     int nbApex = 5;
     ofColor fillColor = ofColor::white;
     ofColor outlineColor = ofColor::black;
-    float outlineThickness = 2;
+    bool outline = false;
 
 };
 

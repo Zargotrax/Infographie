@@ -7,13 +7,15 @@ void Square::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     ofDrawRectangle(position, width, width);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    ofDrawRectangle(position, width, width);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        ofDrawRectangle(position, width, width);
+    }
 }
 
 void Square::rotate90() {

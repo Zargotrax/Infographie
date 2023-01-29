@@ -7,13 +7,15 @@ void Ellipsis::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     ofDrawEllipse(position, width, height);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    ofDrawEllipse(position, width, height);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        ofDrawEllipse(position, width, height);
+    }
 }
 
 void Ellipsis::rotate90() {

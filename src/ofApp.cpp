@@ -19,7 +19,7 @@ ofxDatGuiSlider* heightSlider;
 ofxDatGuiSlider* apexCountSlider;
 ofxDatGuiColorPicker* fillColorPicker;
 ofxDatGuiColorPicker* outlineColorPicker;
-ofxDatGuiSlider* outlineThicknessSlider;
+ofxDatGuiToggle* outlineToggle;
 
 ofxDatGuiLabel* headerLabel;
 ofxDatGuiScrollView* imgScrollView;
@@ -148,8 +148,8 @@ void Application::setup()
     fillColorPicker->onColorPickerEvent(this, &Application::onUpdateShapeColorPickerEvent);
     outlineColorPicker = shapeGui->addColorPicker("Outline", ofColor::lightGray);
     outlineColorPicker->onColorPickerEvent(this, &Application::onUpdateShapeColorPickerEvent);
-    outlineThicknessSlider = shapeGui->addSlider("Outline", 0, 10, 5);
-    outlineThicknessSlider->onSliderEvent(this, &Application::onUpdateShapeSliderEvent);
+    outlineToggle = shapeGui->addToggle("Outline");
+    outlineToggle->onToggleEvent(this, &Application::onUpdateShapeToggleEvent);
 
     renderer.offsetX1 = toolsGui->getWidth();
     renderer.offsetY1 = headerGui->getHeight();
@@ -161,6 +161,7 @@ void Application::setup()
 void Application::draw()
 {
     shapeGui->setVisible(false);
+    ofShowCursor();
 
     renderer.draw();
     imgScrollView->draw();
@@ -168,18 +169,17 @@ void Application::draw()
     float x = static_cast<float>(ofGetMouseX());
     float y = static_cast<float>(ofGetMouseY());
 
-    if (renderer.active != nullptr) {
-        if (isDelete && renderer.hitTest(x, y)) {
-            deleteCursor->draw(x - (deleteCursor->getWidth() / 2), y - (deleteCursor->getWidth() / 2));
-        } else if (isRotate && renderer.hitTest(x, y)) {
-            //ofHideCursor();
-            rotateCursor->draw(x - (rotateCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
-        }
-        else if (isDragging) {
-            //ofHideCursor();
-            moveCursor->draw(x - (moveCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
-        }
-    } else {
+    if (isDelete && renderer.hitTest(x, y) && renderer.active != nullptr) {
+        ofHideCursor();
+        deleteCursor->draw(x - (deleteCursor->getWidth() / 2), y - (deleteCursor->getWidth() / 2));
+    } else if (isRotate && renderer.hitTest(x, y) && renderer.active != nullptr) {
+        ofHideCursor();
+        rotateCursor->draw(x - (rotateCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
+    } else if (isDragging && renderer.active != nullptr) {
+        ofHideCursor();
+        moveCursor->draw(x - (moveCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
+    } else if (!guiHitTest(x, y)) {
+        ofHideCursor();
         basicCursor->draw(x, y);
     }
 
@@ -263,7 +263,6 @@ void Application::exit()
   ofLog() << "<app::exit>";
 }
 
-
 // Application events /////////////////////////////////////////////////////////////////////////////////////////////////
 void Application::onImportEvent(ofxDatGuiButtonEvent e) {
     ofLog() << "<app::import>";
@@ -291,7 +290,9 @@ void Application::onImageSelection(ofxDatGuiScrollViewEvent e) {
     ofLog() << "<app::selecting image : at index " << e.target->getIndex() << ">";
     renderer.active = renderer.elements.at(e.target->getIndex());
     renderer.activeIndex = e.target->getIndex();
+    opacitySlider->setValue(renderer.active->opacity);
     calculateHistogramData();
+    updateUiFromShape();
 }
 
 void Application::onRgbSliderEvent(ofxDatGuiSliderEvent e)
@@ -334,6 +335,7 @@ void Application::onAddSquareEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(square);
+    updateUiFromShape();
 }
 
 void Application::onAddRectangleEvent(ofxDatGuiButtonEvent e) {
@@ -346,6 +348,7 @@ void Application::onAddRectangleEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(rectangle);
+    updateUiFromShape();
 }
 
 void Application::onAddCircleleEvent(ofxDatGuiButtonEvent e) {
@@ -358,6 +361,7 @@ void Application::onAddCircleleEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(circle);
+    updateUiFromShape();
 }
 
 void Application::onAddEllipsisEvent(ofxDatGuiButtonEvent e) {
@@ -370,6 +374,7 @@ void Application::onAddEllipsisEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(ellipsis);
+    updateUiFromShape();
 }
 
 void Application::onAddRegularPolygonEvent(ofxDatGuiButtonEvent e) {
@@ -382,6 +387,7 @@ void Application::onAddRegularPolygonEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(regularPolygon);
+    updateUiFromShape();
 }
 
 void Application::onAddStarEvent(ofxDatGuiButtonEvent e) {
@@ -394,6 +400,7 @@ void Application::onAddStarEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(star);
+    updateUiFromShape();
 }
 
 void Application::onAddArrowEvent(ofxDatGuiButtonEvent e) {
@@ -406,6 +413,7 @@ void Application::onAddArrowEvent(ofxDatGuiButtonEvent e) {
     imgScrollView->add(filename);
 
     addElementToRenderer(arrow);
+    updateUiFromShape();
 }
 
 void Application::onUpdateShapeSliderEvent(ofxDatGuiSliderEvent e) {
@@ -416,6 +424,9 @@ void Application::onUpdateShapeColorPickerEvent(ofxDatGuiColorPickerEvent e) {
     updateShapeFromUi();
 }
 
+void Application::onUpdateShapeToggleEvent(ofxDatGuiToggleEvent e) {
+    updateShapeFromUi();
+}
 
 void Application::onBgColorChangeEvent(ofxDatGuiColorPickerEvent e) {
     ofSetBackgroundColor(e.color);
@@ -494,9 +505,13 @@ string Application::getElementName(string filename) {
 }
 
 bool Application::guiHitTest(int x, int y) {
-    //TODO add all gui elements
-    return x > shapeGui->getPosition().x && x < shapeGui->getPosition().x + shapeGui->getWidth() &&
-        y > shapeGui->getPosition().y && y < shapeGui->getPosition().y + shapeGui->getHeight();
+        //TODO add all gui elements
+        return (x > shapeGui->getPosition().x && x < shapeGui->getPosition().x + shapeGui->getWidth() &&
+        y > shapeGui->getPosition().y && y < shapeGui->getPosition().y + shapeGui->getHeight()) ||
+        (x > headerLabel->getX() && x < headerLabel->getX() + headerLabel->getWidth() &&
+        y > headerLabel->getY() && y < headerLabel->getY() + headerLabel->getHeight()) ||
+        (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
+        y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
 }
 
 void Application::addElementToRenderer(TwoDimensionalObject* object) {
@@ -530,6 +545,19 @@ void Application::updateShapeFromUi() {
         shape->nbApex = apexCountSlider->getValue();
         shape->fillColor = fillColorPicker->getColor();
         shape->outlineColor = outlineColorPicker->getColor();
-        shape->outlineThickness = outlineThicknessSlider->getValue();
+        shape->outline = outlineToggle->getChecked();
+    }
+}
+
+void Application::updateUiFromShape() {
+    //Applies only to shapes
+    if (dynamic_cast<Shape*>(renderer.active) != nullptr) {
+        Shape* shape = dynamic_cast<Shape*>(renderer.active);
+        widthSlider->setValue(shape->width);
+        heightSlider->setValue(shape->height);
+        apexCountSlider->setValue(shape->nbApex);
+        fillColorPicker->setColor(shape->fillColor);
+        outlineColorPicker->setColor(shape->outlineColor);
+        outlineToggle->setChecked(shape->outline);
     }
 }

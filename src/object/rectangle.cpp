@@ -7,13 +7,15 @@ void RectangleShape::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     ofDrawRectangle(position, width, height);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    ofDrawRectangle(position, width, height);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        ofDrawRectangle(position, width, height);
+    }
 }
 
 void RectangleShape::rotate90() {

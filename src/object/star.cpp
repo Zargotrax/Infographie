@@ -6,13 +6,15 @@ void Star::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     drawStar(center);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    drawStar(center);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        drawStar(center);
+    }
 }
 
 void Star::rotate90() {

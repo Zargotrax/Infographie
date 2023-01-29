@@ -6,13 +6,15 @@ void RegularPolygon::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     drawPolygon(center);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    drawPolygon(center);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        drawPolygon(center);
+    }
 }
 
 void RegularPolygon::rotate90() {

@@ -7,13 +7,15 @@ void Circle::draw(int offsetX, int offsetY) {
 
     ofFill();
     ofSetLineWidth(0);
-    ofSetColor(fillColor);
+    ofSetColor(fillColor, opacity);
     ofDrawCircle(position, width / 2);
 
-    ofNoFill();
-    ofSetLineWidth(outlineThickness);
-    ofSetColor(outlineColor);
-    ofDrawCircle(position, width/2);
+    if (outline) {
+        ofNoFill();
+        ofSetLineWidth(1);
+        ofSetColor(outlineColor, opacity);
+        ofDrawCircle(position, width/2);
+    }
 }
 
 void Circle::rotate90() {
