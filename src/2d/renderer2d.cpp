@@ -1,20 +1,20 @@
-#include "renderer.h"
+#include "renderer2d.h"
 
-void Renderer::setup()
+void Renderer2d::setup()
 {
 	ofBackground(100, 100, 100);
 }
 
-void Renderer::draw()
+void Renderer2d::draw()
 {
-	for (TwoDimensionalObject* element : Renderer::elements) {
+	for (TwoDimensionalObject* element : Renderer2d::elements) {
 		ofSetColor(color.r, color.g, color.b, element->opacity);
 		element->draw(offsetX1, offsetY1);
 		ofSetColor(255, 255, 255, 255);
 	}
 }
 
-bool Renderer::hitTest(int x, int y)
+bool Renderer2d::hitTest(int x, int y)
 {
 	return x > offsetX1 && x < offsetX2&& y > offsetY1 && y < offsetY2;
 }

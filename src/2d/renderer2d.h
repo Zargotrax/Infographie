@@ -1,11 +1,11 @@
 #include "ofMain.h"
 #include "./object/drawable.h"
 
-class Renderer
+class Renderer2d
 {
 public:
 
-	std::vector<TwoDimensionalObject*> elements;
+	vector<TwoDimensionalObject*> elements;
 	TwoDimensionalObject* active;
 	int activeIndex = -1;
 	ofColor color;
