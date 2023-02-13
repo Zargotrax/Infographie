@@ -45,6 +45,10 @@ public:
 
 	void onAddSphereEvent(ofxDatGuiButtonEvent e);
 
+	void onEnableTurntable(ofxDatGuiButtonEvent e);
+
+	void onEnableTranslationAnimation(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);

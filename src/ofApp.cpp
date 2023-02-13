@@ -60,8 +60,10 @@ void Application::update() {
 }
 
 void Application::windowResized(int w, int h) {
+    ofLog() << "<app::windowResized to: (" << w << ", " << h << ")>";
     headerLabel->setWidth(ofGetWidth());
     application2D->windowResized(w, h);
+    application3D->windowResized(w, h);
 }
 
 void Application::dragEvent(ofDragInfo dragInfo) {

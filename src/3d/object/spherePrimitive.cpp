@@ -4,11 +4,11 @@ void SpherePrimitive::drawWireframe()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -20,11 +20,11 @@ void SpherePrimitive::drawWireframe()
 void SpherePrimitive::drawSolid() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -36,11 +36,11 @@ void SpherePrimitive::drawSolid() {
 void SpherePrimitive::drawShader() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -53,11 +53,11 @@ void SpherePrimitive::drawBoundingBox()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 

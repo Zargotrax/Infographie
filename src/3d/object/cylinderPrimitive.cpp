@@ -4,11 +4,11 @@ void CylinderPrimitive::drawWireframe()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -20,11 +20,11 @@ void CylinderPrimitive::drawWireframe()
 void CylinderPrimitive::drawSolid() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -36,11 +36,11 @@ void CylinderPrimitive::drawSolid() {
 void CylinderPrimitive::drawShader() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -53,11 +53,11 @@ void CylinderPrimitive::drawBoundingBox()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 

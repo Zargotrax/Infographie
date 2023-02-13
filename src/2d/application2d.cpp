@@ -190,7 +190,6 @@ void Application2d::hideUi() {
 
 void Application2d::windowResized(int w, int h)
 {
-    ofLog() << "<app::windowResized to: (" << w << ", " << h << ")>";
     renderer.offsetX2 = ofGetWidth() - imgScrollView->getWidth();
     renderer.offsetY2 = ofGetHeight();
     imgScrollView->setPosition(ofGetWidth() - 255, headerGui->getHeight() - 1);

@@ -48,6 +48,10 @@ void Application3d::setup(ofxDatGui* header)
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
 	ofxDatGuiButton* addShpereBtn = objectMenu->addButton("Add Sphere");
 	addShpereBtn->onButtonEvent(this, &Application3d::onAddSphereEvent);
+	ofxDatGuiButton* enableTurntableBtn = objectMenu->addButton("Enable Turntable");
+	enableTurntableBtn->onButtonEvent(this, &Application3d::onEnableTurntable);
+	ofxDatGuiButton* enableTranslationAnimBtn = objectMenu->addButton("Enable Translation Animation");
+	enableTranslationAnimBtn->onButtonEvent(this, &Application3d::onEnableTranslationAnimation);
 
 	objectScrollView = new ofxDatGuiScrollView("My scroll view", 100);
 	objectScrollView->setWidth(255);
@@ -87,6 +91,19 @@ void Application3d::update() {
 
 	for (Object* object : everything) {
 		object->selected = false;
+
+		if (object->rotation_animation)
+			object->rotationY = ofGetFrameNum() * 0.3;
+
+		if (object->translation_animation) {
+			int pos = ofGetFrameNum() % 360;
+			if (pos >= 180) {
+				object->translationX += 5;
+			}
+			else {
+				object->translationX -= 5;
+			}
+		}
 	}
 
 	for (Object* object : selection) {
@@ -224,6 +241,18 @@ void Application3d::onAddSphereEvent(ofxDatGuiButtonEvent e) {
 
 	selection.clear();
 	selection.push_back(spherePrimitive);
+}
+
+void Application3d::onEnableTurntable(ofxDatGuiButtonEvent e) {
+	for (Object* object : selection) {
+		object->rotation_animation = !object->rotation_animation;
+	}
+}
+
+void Application3d::onEnableTranslationAnimation(ofxDatGuiButtonEvent e) {
+	for (Object* object : selection) {
+		object->translation_animation = !object->translation_animation;
+	}
 }
 
 void Application3d::import(string path) {

@@ -13,6 +13,8 @@ public:
 	std::vector<Object*> children;
 
 	bool selected = true;
+	bool rotation_animation = false;
+	bool translation_animation = false;
 
 	float rotationX = 0;
 	float rotationY = 0;

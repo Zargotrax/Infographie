@@ -4,11 +4,11 @@ void LoadedFile::drawWireframe()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -20,11 +20,11 @@ void LoadedFile::drawWireframe()
 void LoadedFile::drawSolid() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -36,11 +36,11 @@ void LoadedFile::drawSolid() {
 void LoadedFile::drawShader() {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
@@ -57,11 +57,11 @@ void LoadedFile::drawBoundingBox()
 {
 	ofPushMatrix();
 
+	ofTranslate(translationX, translationY, translationZ);
+
 	ofRotateXDeg(rotationX);
 	ofRotateYDeg(rotationY);
 	ofRotateZDeg(rotationZ);
-
-	ofTranslate(translationX, translationY, translationZ);
 
 	ofScale(scaleX, scaleY, scaleZ);
 
