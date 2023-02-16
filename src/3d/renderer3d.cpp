@@ -8,15 +8,6 @@ void Renderer3d::setup()
 	camera->setupPerspective();
 	camera->setDistance(1000);
 
-	//Snippet for orthogonal camera
-	//camera->removeAllInteractions();
-	//camera->addInteraction(ofEasyCam::TRANSFORM_TRANSLATE_XY, OF_MOUSE_BUTTON_LEFT);
-	//camera->addInteraction(ofEasyCam::TRANSFORM_TRANSLATE_Z, OF_MOUSE_BUTTON_RIGHT);
-	//camera->enableOrtho();
-	//camera->setNearClip(-1000000);
-	//camera->setFarClip(1000000);
-	//camera->setVFlip(true);
-
 	shader = new ofShader();
 	shader->load("lambert_330_vs.glsl", "lambert_330_fs.glsl");
 }
@@ -73,4 +64,12 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode)
 	light.disable();
 	ofDisableDepthTest();
 	ofDisableLighting();
+}
+
+void Renderer3d::setCameraToPerspective() {
+	camera->enableOrtho();
+}
+
+void Renderer3d::setCameraToOrthographic() {
+	camera->disableOrtho();
 }

@@ -49,6 +49,8 @@ public:
 
 	void onEnableTranslationAnimation(ofxDatGuiButtonEvent e);
 
+	void onChangeCameraMode(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);

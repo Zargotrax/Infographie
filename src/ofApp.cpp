@@ -75,6 +75,7 @@ void Application::dragEvent(ofDragInfo dragInfo) {
 }
 
 void Application::keyPressed(int key) {
+    ofLog() << "key pressed : " << key;
     if (viewType == Application::ViewType::View2D) {
         application2D->keyPressed(key);
     } else if (viewType == Application::ViewType::View3D) {
@@ -83,6 +84,7 @@ void Application::keyPressed(int key) {
 }
 
 void Application::keyReleased(int key) {
+    ofLog() << "key released : " << key;
     if (viewType == Application::ViewType::View2D) {
         application2D->keyReleased(key);
     } else if (viewType == Application::ViewType::View3D) {

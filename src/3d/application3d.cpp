@@ -6,6 +6,8 @@
 #include "./3d/object/cylinderPrimitive.h"
 #include "./3d/object/spherePrimitive.h"
 
+bool exporting = false;
+
 vector<Object*> everything;
 vector<Object*> selection;
 queue<Operation*> history;
@@ -52,6 +54,8 @@ void Application3d::setup(ofxDatGui* header)
 	enableTurntableBtn->onButtonEvent(this, &Application3d::onEnableTurntable);
 	ofxDatGuiButton* enableTranslationAnimBtn = objectMenu->addButton("Enable Translation Animation");
 	enableTranslationAnimBtn->onButtonEvent(this, &Application3d::onEnableTranslationAnimation);
+	ofxDatGuiButton* changeCameraModeBtn = objectMenu->addButton("Switch Camera Mode");
+	changeCameraModeBtn->onButtonEvent(this, &Application3d::onChangeCameraMode);
 
 	objectScrollView = new ofxDatGuiScrollView("My scroll view", 100);
 	objectScrollView->setWidth(255);
@@ -76,6 +80,15 @@ void Application3d::setup(ofxDatGui* header)
 
 void Application3d::draw() {
 	renderer.draw(getRenderMode());
+
+	if (exporting) {
+		ofLog() << "exporting";
+		ofImage img;
+		img.grabScreen(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		string filename = "/export/" + to_string(ofGetFrameNum()) + ".png";
+		img.save(filename);
+	}
+
 	objectScrollView->draw(); 
 	selectionScrollView->setHeight(selectionScrollView->getNumItems() * 26);
 	selectionScrollView->draw();
@@ -123,9 +136,15 @@ void Application3d::hideUi() {
 }
 
 void Application3d::keyPressed(int key) {
+	if (key == 48) {
+		exporting = true;
+	}
 }
 
 void Application3d::keyReleased(int key) {
+	if (key == 48) {
+		exporting = false;
+	}
 }
 
 void Application3d::mousePressed(int x, int y, int button) {
@@ -252,6 +271,17 @@ void Application3d::onEnableTurntable(ofxDatGuiButtonEvent e) {
 void Application3d::onEnableTranslationAnimation(ofxDatGuiButtonEvent e) {
 	for (Object* object : selection) {
 		object->translation_animation = !object->translation_animation;
+	}
+}
+
+void Application3d::onChangeCameraMode(ofxDatGuiButtonEvent e) {
+	if (renderer.cameraMode == Renderer3d::Perspective) {
+		renderer.setCameraToOrthographic();
+		renderer.cameraMode = Renderer3d::Orthographic;
+	}
+	else if (renderer.cameraMode == Renderer3d::Orthographic) {
+		renderer.setCameraToPerspective();
+		renderer.cameraMode = Renderer3d::Perspective;
 	}
 }
 

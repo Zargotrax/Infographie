@@ -1,6 +1,8 @@
 #include "application2d.h"
 #include "./ui/histogramComponent.h"
 
+bool isExporting = false;
+
 ofPoint position;
 bool isDelete;
 bool isDragging;
@@ -205,23 +207,24 @@ void Application2d::dragEvent(ofDragInfo dragInfo)
 
 void Application2d::keyPressed(int key)
 {
-    ofLog() << "<app::keyReleased: " << key << ">";
     if (key == OF_KEY_ALT) {
         isDelete = true;
     } else if (key == OF_KEY_SHIFT) {
         isRotate = true;
+    } else if (key == 48) {
+        isExporting = true;
     }
 }
 
 void Application2d::keyReleased(int key)
 {
-    ofLog() << "<app::keyReleased: " << key << ">";
     if (key == OF_KEY_ALT) {
         isDelete = false;
     } else if (key == OF_KEY_SHIFT) {
         isRotate = false;
+    } else if (key == 48) {
+        isExporting = false;
     }
-
 }
 
 void Application2d::mousePressed(int x, int y, int button)
