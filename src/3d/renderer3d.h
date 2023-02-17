@@ -19,7 +19,7 @@ public:
 
 	void update();
 
-	void draw(Renderer3d::RenderMode renderMode);
+	void draw(Renderer3d::RenderMode renderMode, vector<Object*> selected);
 
 	void setCameraToPerspective();
 

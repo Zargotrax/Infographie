@@ -149,6 +149,15 @@ void Application2d::draw()
     ofShowCursor();
 
     renderer.draw();
+
+    if (isExporting && ofGetFrameNum() % 2 == 0) {
+        ofLog() << "exporting";
+        ofImage img;
+        img.grabScreen(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+        string filename = "/export/" + to_string(ofGetFrameNum()) + ".png";
+        img.save(filename);
+    }
+
     imgScrollView->draw();
 
     float x = static_cast<float>(ofGetMouseX());
@@ -492,12 +501,20 @@ string Application2d::getElementName(string filename) {
 
 bool Application2d::guiHitTest(int x, int y) {
         //TODO add all gui elements
+    if (shapeGui->getVisible()) {
         return (x > shapeGui->getPosition().x && x < shapeGui->getPosition().x + shapeGui->getWidth() &&
-        y > shapeGui->getPosition().y && y < shapeGui->getPosition().y + shapeGui->getHeight()) ||
-        (x > headerGui->getPosition().x && x < headerGui->getPosition().x + headerGui->getWidth() &&
-        y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
-        (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
-        y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
+            y > shapeGui->getPosition().y && y < shapeGui->getPosition().y + shapeGui->getHeight()) ||
+            (x > headerGui->getPosition().x && x < headerGui->getPosition().x + headerGui->getWidth() &&
+                y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
+            (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
+                y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
+    }
+    else {
+        return (x > headerGui->getPosition().x && x < headerGui->getPosition().x + headerGui->getWidth() &&
+                y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
+            (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
+                y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
+    }
 }
 
 void Application2d::addElementToRenderer(TwoDimensionalObject* object) {

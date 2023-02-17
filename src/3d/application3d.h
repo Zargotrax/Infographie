@@ -51,6 +51,8 @@ public:
 
 	void onChangeCameraMode(ofxDatGuiButtonEvent e);
 
+	void onDeleteEvent(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);

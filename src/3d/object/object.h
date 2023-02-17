@@ -10,7 +10,8 @@ public:
 	string name;
 	string originalName;
 
-	std::vector<Object*> children;
+	Object* parent;
+	vector<Object*> children;
 
 	bool selected = true;
 	bool rotation_animation = false;

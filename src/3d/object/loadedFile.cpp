@@ -14,6 +14,10 @@ void LoadedFile::drawWireframe()
 
 	model->drawWireframe();
 
+	for (Object* child : children) {
+		child->drawWireframe();
+	}
+
 	ofPopMatrix();
 }
 
@@ -29,6 +33,10 @@ void LoadedFile::drawSolid() {
 	ofScale(scaleX, scaleY, scaleZ);
 
 	model->drawFaces();
+
+	for (Object* child : children) {
+		child->drawSolid();
+	}
 
 	ofPopMatrix();
 }
@@ -47,6 +55,10 @@ void LoadedFile::drawShader() {
 	model->disableMaterials();
 
 	model->drawFaces();
+
+	for (Object* child : children) {
+		child->drawShader();
+	}
 
 	model->enableMaterials();
 
@@ -94,6 +106,10 @@ void LoadedFile::drawBoundingBox()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
+
+	for (Object* child : children) {
+		child->drawBoundingBox();
+	}
 
 	ofPopMatrix();
 }

@@ -7,11 +7,19 @@
 #include "./3d/object/spherePrimitive.h"
 
 bool exporting = false;
+bool isWPressed = false;
+bool isAPressed = false;
+bool isSPressed = false;
+bool isDPressed = false;
+bool isQPressed = false;
+bool isEPressed = false;
+
+ofImage* downloadCursor;
 
 vector<Object*> everything;
 vector<Object*> selection;
-queue<Operation*> history;
-queue<Operation*> historyUndone;
+stack<Operation*> history;
+stack<Operation*> historyUndone;
 
 ofxDatGui* headerUi;
 
@@ -33,6 +41,9 @@ void Application3d::setup(ofxDatGui* header)
 
 	headerUi = header;
 
+	downloadCursor = new ofImage();
+	downloadCursor->load("/cursors/download-cursor.png");
+
 	objectMenu = new ofxDatGui(ofxDatGuiAnchor::TOP_LEFT);
 	objectMenu->setVisible(false);
 	objectMenu->setPosition(0, headerUi->getHeight() - 1);
@@ -50,6 +61,8 @@ void Application3d::setup(ofxDatGui* header)
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
 	ofxDatGuiButton* addShpereBtn = objectMenu->addButton("Add Sphere");
 	addShpereBtn->onButtonEvent(this, &Application3d::onAddSphereEvent);
+	ofxDatGuiButton* deleteBtn = objectMenu->addButton("Delete");
+	deleteBtn->onButtonEvent(this, &Application3d::onDeleteEvent);
 	ofxDatGuiButton* enableTurntableBtn = objectMenu->addButton("Enable Turntable");
 	enableTurntableBtn->onButtonEvent(this, &Application3d::onEnableTurntable);
 	ofxDatGuiButton* enableTranslationAnimBtn = objectMenu->addButton("Enable Translation Animation");
@@ -79,9 +92,9 @@ void Application3d::setup(ofxDatGui* header)
 }
 
 void Application3d::draw() {
-	renderer.draw(getRenderMode());
+	renderer.draw(getRenderMode(), selection);
 
-	if (exporting) {
+	if (exporting && ofGetFrameNum()%2==0) {
 		ofLog() << "exporting";
 		ofImage img;
 		img.grabScreen(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
@@ -92,6 +105,17 @@ void Application3d::draw() {
 	objectScrollView->draw(); 
 	selectionScrollView->setHeight(selectionScrollView->getNumItems() * 26);
 	selectionScrollView->draw();
+
+
+	float x = static_cast<float>(ofGetMouseX());
+	float y = static_cast<float>(ofGetMouseY());
+
+	if (exporting) {
+		ofHideCursor();
+		downloadCursor->draw(x - (downloadCursor->getWidth() / 2), y - (downloadCursor->getWidth() / 2));
+	} else {
+		ofShowCursor();
+	}
 }
 
 void Application3d::update() {
@@ -123,6 +147,20 @@ void Application3d::update() {
 		selectionScrollView->add(object->name);
 		object->selected = true;
 	}
+
+	if (isWPressed)
+		renderer.camera->dolly(-5);
+	if (isSPressed)
+		renderer.camera->dolly(5);
+	if (isAPressed)
+		renderer.camera->truck(-5);
+	if (isDPressed)
+		renderer.camera->truck(5);
+	if (isQPressed)
+		renderer.camera->boom(5);
+	if (isEPressed)
+		renderer.camera->boom(-5);
+
 }
 
 void Application3d::showUi() {
@@ -136,15 +174,37 @@ void Application3d::hideUi() {
 }
 
 void Application3d::keyPressed(int key) {
-	if (key == 48) {
+	if (key == 48) // 0
 		exporting = true;
-	}
+	if (key == 119) // w
+		isWPressed = true;
+	if (key == 97) // a
+		isAPressed = true;
+	if (key == 115) // s
+		isSPressed = true;
+	if (key == 100) // d
+		isDPressed = true;
+	if (key == 113) // q
+		isQPressed = true;
+	if (key == 101) // e
+		isEPressed = true;
 }
 
 void Application3d::keyReleased(int key) {
-	if (key == 48) {
+	if (key == 48) // 0
 		exporting = false;
-	}
+	if (key == 119) // w
+		isWPressed = false;
+	if (key == 97) // a
+		isAPressed = false;
+	if (key == 115) // s
+		isSPressed = false;
+	if (key == 100) // d
+		isDPressed = false;
+	if (key == 113) // q
+		isQPressed = false;
+	if (key == 101) // e
+		isEPressed = false;
 }
 
 void Application3d::mousePressed(int x, int y, int button) {
@@ -179,7 +239,7 @@ void Application3d::onImportEvent(ofxDatGuiButtonEvent e) {
 
 void Application3d::onObjectSelection(ofxDatGuiScrollViewEvent e) {
 	Object* obj = everything.at(e.target->getIndex());
-	if (std::find(selection.begin(), selection.end(), obj) != selection.end()) {
+	if (find(selection.begin(), selection.end(), obj) != selection.end()) {
 		selection.erase(std::find(selection.begin(), selection.end(), obj));
 	}
 	else {
@@ -285,6 +345,31 @@ void Application3d::onChangeCameraMode(ofxDatGuiButtonEvent e) {
 	}
 }
 
+void Application3d::onDeleteEvent(ofxDatGuiButtonEvent e) {
+	//for (Object* object : selection) {
+	while (!selection.empty()) {
+		Object* object = selection.at(0);
+		auto itInSelection = find(selection.begin(), selection.end(), object);
+		selectionScrollView->remove(itInSelection - selection.begin());
+		selection.erase(find(selection.begin(), selection.end(), object));
+
+		//if (find(object->parent->children.begin(), object->parent->children.end(), object) != object->parent->children.end()) {
+		//	object->parent->children.erase(find(object->parent->children.begin(), object->parent->children.end(), object));
+		//}
+
+		for (Object* child : object->children) {
+			child->parent = nullptr;
+			renderer.scene->objects.push_back(child);
+		}
+
+		auto it = find(everything.begin(), everything.end(), object);
+		objectScrollView->remove(it - everything.begin());
+		renderer.scene->objects.erase(find(renderer.scene->objects.begin(), renderer.scene->objects.end(), object));
+		everything.erase(it);
+		delete object;
+	}
+}
+
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();
 	model->loadModel(path);
@@ -296,14 +381,22 @@ void Application3d::import(string path) {
 	if (idx != std::string::npos) {
 		filename = path.substr(idx + 1);
 	}
-
 	obj->originalName = filename;
 	filename = getElementName(filename);
-	obj->name = filename;
 
-	objectScrollView->add(filename);
+	if (selection.empty()) {
+		obj->name = filename;
+		renderer.scene->objects.push_back(obj);
+	}
+	else {
+		Object* parent = selection.at(0);
+		obj->name = filename + " parent is (" + parent->name + ")";
+		parent->children.push_back(obj);
+		obj->parent = parent;
+	}
 
-	renderer.scene->objects.push_back(obj);
+	objectScrollView->add(obj->name);
+
 	everything.push_back(obj);
 
 	selection.clear();
@@ -350,7 +443,7 @@ std::vector<Object*> Application3d::getAllElementFromObject(Object* object) {
 void Application3d::undo() {
 	ofLog() << "undo";
 	if (history.size() > 0) {
-		Operation* operation = history.front();
+		Operation* operation = history.top();
 		operation->rollback();
 		historyUndone.push(operation);
 		history.pop();
@@ -360,7 +453,7 @@ void Application3d::undo() {
 void Application3d::redo() {
 	ofLog() << "redo";
 	if (historyUndone.size() > 0) {
-		Operation* operation = historyUndone.front();
+		Operation* operation = historyUndone.top();
 		operation->apply();
 		history.push(operation);
 		historyUndone.pop();

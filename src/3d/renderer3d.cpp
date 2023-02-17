@@ -25,7 +25,7 @@ void Renderer3d::update() {
 	shader->end();
 }
 
-void Renderer3d::draw(Renderer3d::RenderMode renderMode)
+void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selected)
 {
 	if (renderMode != Renderer3d::RenderMode::Wireframe) {
 		ofEnableLighting();
@@ -52,11 +52,10 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode)
 				object->drawShader();
 			break;
 		}
-		if (object->selected) {
-			ofSetColor(ofColor::orangeRed);
-			object->drawBoundingBox();
-			ofSetColor(ofColor::white);
-		}
+	}
+	
+	for (Object* object : selected) {
+		object->drawBoundingBox();
 	}
 
 	shader->end();
