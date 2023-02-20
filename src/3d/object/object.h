@@ -29,13 +29,19 @@ public:
 	float scaleY = 1;
 	float scaleZ = 1;
 
-	virtual void drawWireframe() = 0;
+	void drawWireframe();
+	virtual void drawWireframeOverride() = 0;
 
-	virtual void drawSolid() = 0;
+	void drawSolid();
+	virtual void drawSolidOverride() = 0;
 
-	virtual void drawShader() = 0;
+	void drawShader();
+	virtual void drawShaderOverride() = 0;
 
-	virtual void drawBoundingBox() = 0;
+	void checkIfSelected();
+
+	void drawBoundingBox();
+	virtual void drawBoundingBoxOverride() = 0;
 
 	virtual ofVec3f getMeshBoundingBoxDimension(ofMesh* mesh) = 0;
 

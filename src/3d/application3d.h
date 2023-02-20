@@ -69,6 +69,6 @@ private:
 
 	Renderer3d::RenderMode getRenderMode();
 
-	void loadShader(string path);
+	void addObject(Object* object, string filename);
 
 };

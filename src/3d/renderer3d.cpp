@@ -27,6 +27,8 @@ void Renderer3d::update() {
 
 void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selected)
 {
+	ofSetColor(ofColor::black);
+
 	if (renderMode != Renderer3d::RenderMode::Wireframe) {
 		ofEnableLighting();
 		ofEnableDepthTest();
@@ -41,21 +43,21 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 
 		switch (renderMode) {
 			case Renderer3d::RenderMode::Wireframe :
-				ofSetColor(ofColor::black);
+				shader->end();
 				object->drawWireframe();
-				ofSetColor(ofColor::white);
+				shader->begin();
 			break;
 			case Renderer3d::RenderMode::Solid:
+				shader->end();
 				object->drawSolid();
+				shader->begin();
 			break;
 			case Renderer3d::RenderMode::Shader:
 				object->drawShader();
 			break;
 		}
-	}
-	
-	for (Object* object : selected) {
-		object->drawBoundingBox();
+
+		object->checkIfSelected();
 	}
 
 	shader->end();
@@ -63,6 +65,7 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 	light.disable();
 	ofDisableDepthTest();
 	ofDisableLighting();
+	ofSetColor(ofColor::white);
 }
 
 void Renderer3d::setCameraToPerspective() {

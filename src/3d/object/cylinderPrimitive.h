@@ -6,13 +6,13 @@ public:
 
 	ofCylinderPrimitive* cylinder;
 
-	void drawWireframe();
+	void drawWireframeOverride();
 
-	void drawSolid();
+	void drawSolidOverride();
 
-	void drawShader();
+	void drawShaderOverride();
 
-	void drawBoundingBox();
+	void drawBoundingBoxOverride();
 
 	ofVec3f getMeshBoundingBoxDimension(ofMesh* mesh);
 };

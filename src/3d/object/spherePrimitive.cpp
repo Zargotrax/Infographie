@@ -1,66 +1,18 @@
 #include "spherePrimitive.h"
 
-void SpherePrimitive::drawWireframe()
-{
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void SpherePrimitive::drawWireframeOverride() {
 	sphere->drawWireframe();
-
-	ofPopMatrix();
 }
 
-void SpherePrimitive::drawSolid() {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void SpherePrimitive::drawSolidOverride() {
 	sphere->drawFaces();
-
-	ofPopMatrix();
 }
 
-void SpherePrimitive::drawShader() {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void SpherePrimitive::drawShaderOverride() {
 	sphere->drawFaces();
-
-	ofPopMatrix();
 }
 
-void SpherePrimitive::drawBoundingBox()
-{
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void SpherePrimitive::drawBoundingBoxOverride() {
 	ofVec3f scale = getMeshBoundingBoxDimension(sphere->getMeshPtr());
 	//float scaleFactor = model->getNormalizedScale();
 	float scaleFactor = -1;
@@ -90,8 +42,6 @@ void SpherePrimitive::drawBoundingBox()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
-
-	ofPopMatrix();
 }
 
 ofVec3f SpherePrimitive::getMeshBoundingBoxDimension(ofMesh* mesh) {

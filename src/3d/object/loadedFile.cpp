@@ -1,84 +1,31 @@
 #include "loadedFile.h"
 
-void LoadedFile::drawWireframe()
-{
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void LoadedFile::drawWireframeOverride() {
 	model->drawWireframe();
-
-	for (Object* child : children) {
-		child->drawWireframe();
-	}
-
-	ofPopMatrix();
 }
 
-void LoadedFile::drawSolid() {
-	ofPushMatrix();
 
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void LoadedFile::drawSolidOverride() {
 	model->drawFaces();
-
-	for (Object* child : children) {
-		child->drawSolid();
-	}
-
-	ofPopMatrix();
 }
 
-void LoadedFile::drawShader() {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void LoadedFile::drawShaderOverride() {
 	model->disableMaterials();
 
 	model->drawFaces();
 
-	for (Object* child : children) {
-		child->drawShader();
-	}
-
 	model->enableMaterials();
-
-	ofPopMatrix();
 }
 
-void LoadedFile::drawBoundingBox()
+void LoadedFile::drawBoundingBoxOverride()
 {
-	ofPushMatrix();
+	ofMesh* aggregateMesh = new ofMesh();
 
-	ofTranslate(translationX, translationY, translationZ);
+	for (int i = 0; i <= model->getMeshCount(); i++) {
+		aggregateMesh->append(model->getMesh(i));
+	} 
 
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
-	ofMesh mesh = model->getMesh(0);
-	ofVec3f scale = getMeshBoundingBoxDimension(&mesh);
+	ofVec3f scale = getMeshBoundingBoxDimension(aggregateMesh);
 	float scaleFactor = model->getNormalizedScale();
 	scale = (scale * scaleFactor) / 2;
 	ofVec3f pos = model->getPosition() + (model->getSceneCenter() * -scaleFactor);
@@ -106,12 +53,6 @@ void LoadedFile::drawBoundingBox()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
-
-	for (Object* child : children) {
-		child->drawBoundingBox();
-	}
-
-	ofPopMatrix();
 }
 
 ofVec3f LoadedFile::getMeshBoundingBoxDimension(ofMesh* mesh) {
@@ -122,11 +63,11 @@ ofVec3f LoadedFile::getMeshBoundingBoxDimension(ofMesh* mesh) {
 	std::for_each(mesh->getVertices().begin(), mesh->getVertices().end(),
 		[&minVertex, &maxVertex](const ofPoint& vertex) {
 			minVertex.x = std::min(minVertex.x, vertex.x);
-	minVertex.y = std::min(minVertex.y, vertex.y);
-	minVertex.z = std::min(minVertex.z, vertex.z);
-	maxVertex.x = std::max(maxVertex.x, vertex.x);
-	maxVertex.y = std::max(maxVertex.y, vertex.y);
-	maxVertex.z = std::max(maxVertex.z, vertex.z);
+			minVertex.y = std::min(minVertex.y, vertex.y);
+			minVertex.z = std::min(minVertex.z, vertex.z);
+			maxVertex.x = std::max(maxVertex.x, vertex.x);
+			maxVertex.y = std::max(maxVertex.y, vertex.y);
+			maxVertex.z = std::max(maxVertex.z, vertex.z);
 		});
 
 	return maxVertex - minVertex;

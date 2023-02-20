@@ -1,66 +1,19 @@
 #include "cylinderPrimitive.h"
 
-void CylinderPrimitive::drawWireframe()
+void CylinderPrimitive::drawWireframeOverride()
 {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
-	cylinder->drawWireframe();
-
-	ofPopMatrix();
+	cylinder->draw(OF_MESH_WIREFRAME);
 }
 
-void CylinderPrimitive::drawSolid() {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void CylinderPrimitive::drawSolidOverride() {
 	cylinder->drawFaces();
-
-	ofPopMatrix();
 }
 
-void CylinderPrimitive::drawShader() {
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void CylinderPrimitive::drawShaderOverride() {
 	cylinder->drawFaces();
-
-	ofPopMatrix();
 }
 
-void CylinderPrimitive::drawBoundingBox()
-{
-	ofPushMatrix();
-
-	ofTranslate(translationX, translationY, translationZ);
-
-	ofRotateXDeg(rotationX);
-	ofRotateYDeg(rotationY);
-	ofRotateZDeg(rotationZ);
-
-	ofScale(scaleX, scaleY, scaleZ);
-
+void CylinderPrimitive::drawBoundingBoxOverride() {
 	ofVec3f scale = getMeshBoundingBoxDimension(cylinder->getMeshPtr());
 	//float scaleFactor = model->getNormalizedScale();
 	float scaleFactor = -1;
@@ -90,8 +43,6 @@ void CylinderPrimitive::drawBoundingBox()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
-
-	ofPopMatrix();
 }
 
 ofVec3f CylinderPrimitive::getMeshBoundingBoxDimension(ofMesh* mesh) {

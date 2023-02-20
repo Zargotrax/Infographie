@@ -291,15 +291,7 @@ void Application3d::onAddCylinderEvent(ofxDatGuiButtonEvent e) {
 	std::string filename = "cylinder";
 	cylinderPrimitive->originalName = filename;
 	filename = getElementName(filename);
-	cylinderPrimitive->name = filename;
-
-	objectScrollView->add(filename);
-
-	renderer.scene->objects.push_back(cylinderPrimitive);
-	everything.push_back(cylinderPrimitive);
-
-	selection.clear();
-	selection.push_back(cylinderPrimitive);
+	addObject(cylinderPrimitive, filename);
 }
 
 void Application3d::onAddSphereEvent(ofxDatGuiButtonEvent e) {
@@ -311,15 +303,7 @@ void Application3d::onAddSphereEvent(ofxDatGuiButtonEvent e) {
 	std::string filename = "sphere";
 	spherePrimitive->originalName = filename;
 	filename = getElementName(filename);
-	spherePrimitive->name = filename;
-
-	objectScrollView->add(filename);
-
-	renderer.scene->objects.push_back(spherePrimitive);
-	everything.push_back(spherePrimitive);
-
-	selection.clear();
-	selection.push_back(spherePrimitive);
+	addObject(spherePrimitive, filename);
 }
 
 void Application3d::onEnableTurntable(ofxDatGuiButtonEvent e) {
@@ -384,23 +368,7 @@ void Application3d::import(string path) {
 	obj->originalName = filename;
 	filename = getElementName(filename);
 
-	if (selection.empty()) {
-		obj->name = filename;
-		renderer.scene->objects.push_back(obj);
-	}
-	else {
-		Object* parent = selection.at(0);
-		obj->name = filename + " parent is (" + parent->name + ")";
-		parent->children.push_back(obj);
-		obj->parent = parent;
-	}
-
-	objectScrollView->add(obj->name);
-
-	everything.push_back(obj);
-
-	selection.clear();
-	selection.push_back(obj);
+	addObject(obj, filename);
 }
 
 string Application3d::getElementName(string filename) {
@@ -468,4 +436,24 @@ Renderer3d::RenderMode Application3d::getRenderMode() {
 		return Renderer3d::RenderMode::Solid;
 	if (renderMode == "Shader")
 		return Renderer3d::RenderMode::Shader;
+}
+
+void Application3d::addObject(Object* object, string filename) {
+	if (selection.empty()) {
+		object->name = filename;
+		renderer.scene->objects.push_back(object);
+	}
+	else {
+		Object* parent = selection.at(0);
+		object->name = filename + " parent is (" + parent->name + ")";
+		parent->children.push_back(object);
+		object->parent = parent;
+	}
+
+	objectScrollView->add(object->name);
+
+	everything.push_back(object);
+
+	selection.clear();
+	selection.push_back(object);
 }
