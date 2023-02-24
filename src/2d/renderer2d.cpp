@@ -8,7 +8,7 @@ void Renderer2d::setup()
 void Renderer2d::draw()
 {
 	for (TwoDimensionalObject* element : Renderer2d::elements) {
-		ofSetColor(color.r, color.g, color.b, element->opacity);
+		ofSetColor(element->color.r, element->color.g, element->color.b, element->opacity);
 		element->draw(offsetX1, offsetY1);
 		ofSetColor(255, 255, 255, 255);
 	}

@@ -330,16 +330,16 @@ void Application3d::onChangeCameraMode(ofxDatGuiButtonEvent e) {
 }
 
 void Application3d::onDeleteEvent(ofxDatGuiButtonEvent e) {
-	//for (Object* object : selection) {
 	while (!selection.empty()) {
 		Object* object = selection.at(0);
 		auto itInSelection = find(selection.begin(), selection.end(), object);
 		selectionScrollView->remove(itInSelection - selection.begin());
 		selection.erase(find(selection.begin(), selection.end(), object));
 
-		//if (find(object->parent->children.begin(), object->parent->children.end(), object) != object->parent->children.end()) {
-		//	object->parent->children.erase(find(object->parent->children.begin(), object->parent->children.end(), object));
-		//}
+		if (object->parent != nullptr) {
+			if (count(object->parent->children.begin(), object->parent->children.end(), object))
+				object->parent->children.erase(find(object->parent->children.begin(), object->parent->children.end(), object));
+		}
 
 		for (Object* child : object->children) {
 			child->parent = nullptr;
@@ -348,7 +348,8 @@ void Application3d::onDeleteEvent(ofxDatGuiButtonEvent e) {
 
 		auto it = find(everything.begin(), everything.end(), object);
 		objectScrollView->remove(it - everything.begin());
-		renderer.scene->objects.erase(find(renderer.scene->objects.begin(), renderer.scene->objects.end(), object));
+		if (count(renderer.scene->objects.begin(), renderer.scene->objects.end(), object))
+			renderer.scene->objects.erase(find(renderer.scene->objects.begin(), renderer.scene->objects.end(), object));
 		everything.erase(it);
 		delete object;
 	}
@@ -356,19 +357,22 @@ void Application3d::onDeleteEvent(ofxDatGuiButtonEvent e) {
 
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();
-	model->loadModel(path);
-	LoadedFile* obj = new LoadedFile();
-	obj->model = model;
+	if (model->loadModel(path)) {
+		LoadedFile* obj = new LoadedFile();
+		obj->model = model;
 
-	std::string filename;
-	std::string::size_type idx = path.rfind('\\');
-	if (idx != std::string::npos) {
-		filename = path.substr(idx + 1);
+		std::string filename;
+		std::string::size_type idx = path.rfind('\\');
+		if (idx != std::string::npos) {
+			filename = path.substr(idx + 1);
+		}
+		obj->originalName = filename;
+		filename = getElementName(filename);
+
+		addObject(obj, filename);
+	} else {
+		ofLog() << "<app::import - failed>";
 	}
-	obj->originalName = filename;
-	filename = getElementName(filename);
-
-	addObject(obj, filename);
 }
 
 string Application3d::getElementName(string filename) {
@@ -445,7 +449,7 @@ void Application3d::addObject(Object* object, string filename) {
 	}
 	else {
 		Object* parent = selection.at(0);
-		object->name = filename + " parent is (" + parent->name + ")";
+		object->name = filename;
 		parent->children.push_back(object);
 		object->parent = parent;
 	}

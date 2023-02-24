@@ -21,7 +21,7 @@ void LoadedFile::drawBoundingBoxOverride()
 {
 	ofMesh* aggregateMesh = new ofMesh();
 
-	for (int i = 0; i <= model->getMeshCount(); i++) {
+	for (int i = 0; i < model->getMeshCount(); i++) {
 		aggregateMesh->append(model->getMesh(i));
 	} 
 

@@ -1,7 +1,6 @@
 #include "image.h"
 
 void Image::draw(int offsetX, int offsetY) {
-    ofSetColor(ofColor::white, opacity);
     imageData.draw(TwoDimensionalObject::coordinates.x + offsetX, TwoDimensionalObject::coordinates.y + offsetY);
 }
 

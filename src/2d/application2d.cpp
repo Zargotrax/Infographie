@@ -34,11 +34,10 @@ ofxDatGuiSlider* opacitySlider;
 
 ofImage* basicCursor;
 ofImage* moveCursor;
-ofImage* sliderCursor;
+ofImage* exportingCursing;
 ofImage* rotateCursor;
 ofImage* deleteCursor;
 
-// Gui setup /////////////////////////////////////////////////////////////////////////////////////////////////
 void Application2d::setup(ofxDatGui* header)
 {
     renderer.setup();
@@ -49,8 +48,8 @@ void Application2d::setup(ofxDatGui* header)
     basicCursor->load("/cursors/basic-cursor.png");
     moveCursor = new ofImage();
     moveCursor->load("/cursors/move-cursor.png");
-    sliderCursor = new ofImage();
-    sliderCursor->load("/cursors/slider-cursor.png");
+    exportingCursing = new ofImage();
+    exportingCursing->load("/cursors/download-cursor.png");
     rotateCursor= new ofImage();
     rotateCursor->load("/cursors/rotate-cursor.png");
     deleteCursor = new ofImage();
@@ -79,9 +78,9 @@ void Application2d::setup(ofxDatGui* header)
     blueChannelSlider->onSliderEvent(this, &Application2d::onRgbSliderEvent);
 
     ofxDatGuiFolder* hsbSliderFolder = toolsGui->addFolder("HSB", ofColor::black);
-    hueSlider = hsbSliderFolder->addSlider("Hue", 0, 360, 360);
-    saturationSlider = hsbSliderFolder->addSlider("Saturation", 0, 100, 100);
-    brightnessSlider = hsbSliderFolder->addSlider("Brightness", 0, 100, 100);
+    hueSlider = hsbSliderFolder->addSlider("Hue", 0, 255, 255);
+    saturationSlider = hsbSliderFolder->addSlider("Saturation", 0, 255, 255);
+    brightnessSlider = hsbSliderFolder->addSlider("Brightness", 0, 255, 255);
 
     hueSlider->onSliderEvent(this, &Application2d::onHsbSliderEvent);
     saturationSlider->onSliderEvent(this, &Application2d::onHsbSliderEvent);
@@ -89,6 +88,10 @@ void Application2d::setup(ofxDatGui* header)
 
     opacitySlider = toolsGui->addSlider("Opacity", 0, 100, 100);
     opacitySlider->onSliderEvent(this, &Application2d::onOpacitySliderEvent);
+    ofxDatGuiButton* moveLayerUpBtn = toolsGui->addButton("Move Layer Up");
+    moveLayerUpBtn->onButtonEvent(this, &Application2d::onMoveLayerUpEvent);
+    ofxDatGuiButton* moveLayerDownBtn = toolsGui->addButton("Move Layer Down");
+    moveLayerDownBtn->onButtonEvent(this, &Application2d::onMoveLayerDownEvent);
 
     ofxDatGuiButton* rotateBtn = toolsGui->addButton("Rotate");
     rotateBtn->onButtonEvent(this, &Application2d::onRotateEvent);
@@ -146,7 +149,6 @@ void Application2d::setup(ofxDatGui* header)
 void Application2d::draw()
 {
     shapeGui->setVisible(false);
-    ofShowCursor();
 
     renderer.draw();
 
@@ -169,12 +171,18 @@ void Application2d::draw()
     } else if (isRotate && renderer.hitTest(x, y) && renderer.active != nullptr) {
         ofHideCursor();
         rotateCursor->draw(x - (rotateCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
-    } else if (isDragging && renderer.active != nullptr) {
+    }
+    else if (isDragging && renderer.active != nullptr) {
         ofHideCursor();
         moveCursor->draw(x - (moveCursor->getWidth() / 2), y - (moveCursor->getWidth() / 2));
+    } else if (isExporting) {
+        ofHideCursor();
+        exportingCursing->draw(x, y);
     } else if (!guiHitTest(x, y)) {
         ofHideCursor();
         basicCursor->draw(x, y);
+    } else {
+        ofShowCursor();
     }
 
     if (dynamic_cast<Shape*>(renderer.active) != nullptr)
@@ -260,13 +268,12 @@ void Application2d::mouseReleased(int x, int y, int button)
     isDragging = false;
 }
 
-// Application events /////////////////////////////////////////////////////////////////////////////////////////////////
 void Application2d::onImportEvent(ofxDatGuiButtonEvent e) {
     ofLog() << "<app::import>";
     ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
     if (openFileResult.bSuccess) {
         import(openFileResult.getPath());
-       ofLog() << "<app::import - success>";
+        ofLog() << "<app::import - success>";
     }
     else {
         ofLog() << "<app::import - failed>";
@@ -292,18 +299,18 @@ void Application2d::onImageSelection(ofxDatGuiScrollViewEvent e) {
 
 void Application2d::onRgbSliderEvent(ofxDatGuiSliderEvent e)
 {
-    renderer.color = ofColor::ofColor_(redChannelSlider->getValue(), greenChannelSlider->getValue(), blueChannelSlider->getValue());
-    hueSlider->setValue(renderer.color.getHue());
-    saturationSlider->setValue(renderer.color.getSaturation());
-    brightnessSlider->setValue(renderer.color.getBrightness());
+    renderer.active->color = ofColor::ofColor_(redChannelSlider->getValue(), greenChannelSlider->getValue(), blueChannelSlider->getValue());
+    hueSlider->setValue(renderer.active->color.getHue(), false);
+    saturationSlider->setValue(renderer.active->color.getSaturation(), false);
+    brightnessSlider->setValue(renderer.active->color.getBrightness(), false);
 };
 
 void Application2d::onHsbSliderEvent(ofxDatGuiSliderEvent e)
 {
-    renderer.color = ofColor::fromHsb(hueSlider->getValue(), saturationSlider->getValue(), brightnessSlider->getValue());
-    redChannelSlider->setValue(renderer.color.r);
-    greenChannelSlider->setValue(renderer.color.g);
-    blueChannelSlider->setValue(renderer.color.b);
+    renderer.active->color = ofColor::fromHsb(hueSlider->getValue(), saturationSlider->getValue(), brightnessSlider->getValue());
+    redChannelSlider->setValue(renderer.active->color.r, false);
+    greenChannelSlider->setValue(renderer.active->color.g, false);
+    blueChannelSlider->setValue(renderer.active->color.b, false);
 };
 
 void Application2d::onOpacitySliderEvent(ofxDatGuiSliderEvent e) {
@@ -427,31 +434,51 @@ void Application2d::onBgColorChangeEvent(ofxDatGuiColorPickerEvent e) {
     ofSetBackgroundColor(e.color);
 }
 
-// Privates utility methods /////////////////////////////////////////////////////////////////////////////////////////////////
+void Application2d::onMoveLayerUpEvent(ofxDatGuiButtonEvent e) {
+    if (renderer.active != nullptr) {
+        if (renderer.activeIndex != 0) {
+            imgScrollView->swap(renderer.activeIndex, renderer.activeIndex - 1);
+            swap(renderer.elements[renderer.activeIndex], renderer.elements[renderer.activeIndex - 1]);
+        }
+    }
+}
+
+void Application2d::onMoveLayerDownEvent(ofxDatGuiButtonEvent e) {
+    if (renderer.active != nullptr) {
+        if (renderer.activeIndex != renderer.elements.size() - 1) {
+            imgScrollView->swap(renderer.activeIndex, renderer.activeIndex + 1);
+            swap(renderer.elements[renderer.activeIndex], renderer.elements[renderer.activeIndex + 1]);
+        }
+    }
+}
 
 void Application2d::import(string path) {
     ofImage imageData;
     imageData.load(path);
+    if (imageData.isAllocated()) {
+        string filename;
+        string::size_type idx = path.rfind('\\');
+        if (idx != string::npos) {
+            filename = path.substr(idx + 1);
+        }
 
-    std::string filename;
-    std::string::size_type idx = path.rfind('\\');
-    if (idx != std::string::npos) {
-        filename = path.substr(idx + 1);
+        Image* image = new Image();
+        image->imageData = imageData;
+        image->originalName = filename;
+        image->path = path;
+        filename = getElementName(filename);
+        image->name = filename;
+
+        imgScrollView->add(filename);
+
+        renderer.elements.push_back(image);
+        renderer.active = image;
+        renderer.activeIndex++;
+        calculateHistogramData();
     }
-
-    Image* image = new Image();
-    image->imageData = imageData;
-    image->originalName = filename;
-    image->path = path;
-    filename = getElementName(filename);
-    image->name = filename;
-
-    imgScrollView->add(filename);
-
-    renderer.elements.push_back(image);
-    renderer.active = image;
-    renderer.activeIndex++;
-    calculateHistogramData();
+    else {
+        ofLog() << "echec de l'import d'image";
+    }
 }
 
 void Application2d::calculateHistogramData()
@@ -494,24 +521,21 @@ string Application2d::getElementName(string filename) {
     }
 
     if (duplicate > 0) {
-        filename = filename + " (" + std::to_string(duplicate) + ")";
+        filename = filename + " (" + to_string(duplicate) + ")";
     }
     return filename;
 }
 
 bool Application2d::guiHitTest(int x, int y) {
-        //TODO add all gui elements
     if (shapeGui->getVisible()) {
         return (x > shapeGui->getPosition().x && x < shapeGui->getPosition().x + shapeGui->getWidth() &&
             y > shapeGui->getPosition().y && y < shapeGui->getPosition().y + shapeGui->getHeight()) ||
-            (x > headerGui->getPosition().x && x < headerGui->getPosition().x + headerGui->getWidth() &&
-                y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
+            (y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
             (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
                 y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
     }
     else {
-        return (x > headerGui->getPosition().x && x < headerGui->getPosition().x + headerGui->getWidth() &&
-                y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
+        return (y > headerGui->getPosition().y && y < headerGui->getPosition().y + headerGui->getHeight()) ||
             (x > toolsGui->getPosition().x && x < toolsGui->getPosition().x + toolsGui->getWidth() &&
                 y > toolsGui->getPosition().y && y < toolsGui->getPosition().y + toolsGui->getHeight());
     }

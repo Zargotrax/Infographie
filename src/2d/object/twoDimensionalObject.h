@@ -10,6 +10,7 @@ public:
     string originalName;
     ofPoint coordinates;
     int opacity = 255;
+    ofColor color = ofColor::white;
 
     virtual void draw(int offsetX, int offsetY) = 0;
     virtual void rotate90() = 0;

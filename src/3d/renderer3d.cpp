@@ -10,14 +10,13 @@ void Renderer3d::setup()
 
 	shader = new ofShader();
 	shader->load("lambert_330_vs.glsl", "lambert_330_fs.glsl");
-}
-
-void Renderer3d::update() {
 
 	light.setPointLight();
 	light.setDiffuseColor(255);
-	light.setGlobalPosition(ofGetWidth() / 2, ofGetHeight() / 2, 500);
+	light.setGlobalPosition(500, 500, 500);
+}
 
+void Renderer3d::update() {
 	shader->begin();
 	shader->setUniform3f("color_ambient", 0.1f, 0.1f, 0.1f);
 	shader->setUniform3f("color_diffuse", 1, 1, 1);
@@ -30,8 +29,8 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 	ofSetColor(ofColor::black);
 
 	if (renderMode != Renderer3d::RenderMode::Wireframe) {
-		ofEnableLighting();
 		ofEnableDepthTest();
+		ofEnableLighting();
 		light.enable();
 	}
 

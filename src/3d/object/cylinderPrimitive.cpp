@@ -6,6 +6,8 @@ void CylinderPrimitive::drawWireframeOverride()
 }
 
 void CylinderPrimitive::drawSolidOverride() {
+	cylinder->enableColors();
+	cylinder->enableTextures();
 	cylinder->drawFaces();
 }
 

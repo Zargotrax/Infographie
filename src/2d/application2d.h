@@ -68,6 +68,10 @@ public:
 
 	void onBgColorChangeEvent(ofxDatGuiColorPickerEvent e);
 
+	void onMoveLayerUpEvent(ofxDatGuiButtonEvent e);
+
+	void onMoveLayerDownEvent(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);
@@ -87,5 +91,4 @@ private:
 	void updateShapeFromUi();
 
 	void updateUiFromShape();
-
 };
