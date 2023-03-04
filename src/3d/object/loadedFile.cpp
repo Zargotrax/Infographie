@@ -53,6 +53,8 @@ void LoadedFile::drawBoundingBoxOverride()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
+
+	delete aggregateMesh;
 }
 
 ofVec3f LoadedFile::getMeshBoundingBoxDimension(ofMesh* mesh) {

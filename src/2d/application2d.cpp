@@ -148,7 +148,12 @@ void Application2d::setup(ofxDatGui* header)
 
 void Application2d::draw()
 {
-    shapeGui->setVisible(false);
+    if (dynamic_cast<Shape*>(renderer.active) != nullptr) {
+        shapeGui->setVisible(true);
+    }
+    else {
+        shapeGui->setVisible(false);
+    }
 
     renderer.draw();
 
@@ -184,9 +189,6 @@ void Application2d::draw()
     } else {
         ofShowCursor();
     }
-
-    if (dynamic_cast<Shape*>(renderer.active) != nullptr)
-        shapeGui->setVisible(true);
 }
 
 void Application2d::update() {
@@ -577,7 +579,6 @@ void Application2d::updateShapeFromUi() {
 }
 
 void Application2d::updateUiFromShape() {
-    //Applies only to shapes
     if (dynamic_cast<Shape*>(renderer.active) != nullptr) {
         Shape* shape = dynamic_cast<Shape*>(renderer.active);
         widthSlider->setValue(shape->width);

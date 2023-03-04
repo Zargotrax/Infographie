@@ -55,11 +55,11 @@ ofVec3f CylinderPrimitive::getMeshBoundingBoxDimension(ofMesh* mesh) {
 	std::for_each(mesh->getVertices().begin(), mesh->getVertices().end(),
 		[&minVertex, &maxVertex](const ofPoint& vertex) {
 			minVertex.x = std::min(minVertex.x, vertex.x);
-	minVertex.y = std::min(minVertex.y, vertex.y);
-	minVertex.z = std::min(minVertex.z, vertex.z);
-	maxVertex.x = std::max(maxVertex.x, vertex.x);
-	maxVertex.y = std::max(maxVertex.y, vertex.y);
-	maxVertex.z = std::max(maxVertex.z, vertex.z);
+			minVertex.y = std::min(minVertex.y, vertex.y);
+			minVertex.z = std::min(minVertex.z, vertex.z);
+			maxVertex.x = std::max(maxVertex.x, vertex.x);
+			maxVertex.y = std::max(maxVertex.y, vertex.y);
+			maxVertex.z = std::max(maxVertex.z, vertex.z);
 		});
 
 	return maxVertex - minVertex;

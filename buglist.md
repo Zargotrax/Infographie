@@ -13,8 +13,8 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 --12. the cursor disapear over the view menu in the 2d view--
 13. shader mode : primitive appear all black when there should be light
 --14. Cursor is not displaing export animation when exporting in 2d view--
-15. add btn to change img layer
+--15. add btn to change img layer--
 --16. 2d view changing color changes all img color at the same time--
-17. ofxAssimpModelLoader: getMesh(): mesh id 1 out of range for total num meshes: 1
+--17. ofxAssimpModelLoader: getMesh(): mesh id 1 out of range for total num meshes: 1--
 --18. when adding a cylinder the menu turns black--
-19. investigate memory leak
+--19. investigate memory leak--
