@@ -55,7 +55,7 @@ void Application3d::setup(ofxDatGui* header)
 	undoBtn->onButtonEvent(this, &Application3d::onUndoEvent);
 	ofxDatGuiButton* redoBtn = objectMenu->addButton("Redo");
 	redoBtn->onButtonEvent(this, &Application3d::onRedoEvent);	
-	vector<string> renderModeOptions = { "Wireframe", "Solid", "Shader" };
+	vector<string> renderModeOptions = { "Wireframe", "Shader" };
 	renderModeDropdown = objectMenu->addDropdown("Render Mode", renderModeOptions);
 	ofxDatGuiButton* addCylinderBtn = objectMenu->addButton("Add Cylinder");
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
@@ -436,8 +436,6 @@ Renderer3d::RenderMode Application3d::getRenderMode() {
 	string renderMode = renderModeDropdown->getSelected()->getLabel();
 	if (renderMode == "Wireframe")
 		return Renderer3d::RenderMode::Wireframe;
-	if (renderMode == "Solid")
-		return Renderer3d::RenderMode::Solid;
 	if (renderMode == "Shader")
 		return Renderer3d::RenderMode::Shader;
 }

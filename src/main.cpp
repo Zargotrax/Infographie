@@ -3,15 +3,15 @@
 
 int main()
 {
-  ofGLFWWindowSettings windowSettings;
-  windowSettings.resizable = true;
-  windowSettings.setSize(1250, 750);
-  windowSettings.setGLVersion(4, 6);
+	ofGLFWWindowSettings windowSettings;
+	windowSettings.resizable = true;
+	windowSettings.setSize(1250, 750);
+	windowSettings.setGLVersion(4, 6);
 
-  ofCreateWindow(windowSettings);
+	ofCreateWindow(windowSettings);
 
-  Application* application = new Application();
+	Application* application = new Application();
 
-  ofRunApp(application);
+	ofRunApp(application);
 
 }

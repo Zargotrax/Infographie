@@ -46,11 +46,6 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 				object->drawWireframe();
 				shader->begin();
 			break;
-			case Renderer3d::RenderMode::Solid:
-				shader->end();
-				object->drawSolid();
-				shader->begin();
-			break;
 			case Renderer3d::RenderMode::Shader:
 				object->drawShader();
 			break;

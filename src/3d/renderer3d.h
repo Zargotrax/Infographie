@@ -5,7 +5,7 @@ class Renderer3d
 {
 public:
 
-	enum RenderMode { Wireframe, Solid, Shader};
+	enum RenderMode { Wireframe, Shader};
 	enum CameraMode { Perspective, Orthographic};
 
 	ofEasyCam* camera;
