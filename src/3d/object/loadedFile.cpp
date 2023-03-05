@@ -28,7 +28,8 @@ void LoadedFile::drawBoundingBoxOverride()
 	ofVec3f scale = getMeshBoundingBoxDimension(aggregateMesh);
 	float scaleFactor = model->getNormalizedScale();
 	scale = (scale * scaleFactor) / 2;
-	ofVec3f pos = model->getPosition() + (model->getSceneCenter() * -scaleFactor);
+	ofVec3f pos1 = model->getPosition() + (model->getSceneCenter() * -scaleFactor);
+	ofVec3f pos = {-pos1.x, pos1.y, -pos1.z};
 
 	ofVec3f v1 = { pos.x + scale.x, pos.y - scale.y, pos.z + scale.z };
 	ofVec3f v2 = { pos.x + scale.x, pos.y - scale.y, pos.z - scale.z };
@@ -53,6 +54,8 @@ void LoadedFile::drawBoundingBoxOverride()
 	ofDrawLine(v6, v7);
 	ofDrawLine(v7, v8);
 	ofDrawLine(v5, v8);
+
+	ofDrawSphere(pos, 10);
 
 	delete aggregateMesh;
 }

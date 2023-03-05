@@ -11,7 +11,7 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 --10. add trycatch for both import 2d - 3d--
 --11. fix delete btn in 3d view--
 --12. the cursor disapear over the view menu in the 2d view--
-13. shader mode : primitive appear all black when there should be light
+--13. shader mode : primitive appear all black when there should be light--
 --14. Cursor is not displaing export animation when exporting in 2d view--
 --15. add btn to change img layer--
 --16. 2d view changing color changes all img color at the same time--
