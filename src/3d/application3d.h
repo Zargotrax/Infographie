@@ -53,6 +53,18 @@ public:
 
 	void onDeleteEvent(ofxDatGuiButtonEvent e);
 
+	void onRandomTextureEvent(ofxDatGuiButtonEvent e);
+
+	void onImportTextureEvent(ofxDatGuiButtonEvent e);
+
+	void onTextureMagFilterDropdownSelection(ofxDatGuiDropdownEvent e);
+
+	void onTextureFilterDropdownSelection(ofxDatGuiDropdownEvent e);
+
+	void onToneMappingEvent(ofxDatGuiSliderEvent e);
+
+	void onMaterialColorChangeEvent(ofxDatGuiColorPickerEvent e);
+
 private:
 
 	void import(string path);

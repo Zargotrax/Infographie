@@ -35,6 +35,17 @@ ofxDatGuiSlider* xAxisSlider;
 ofxDatGuiSlider* yAxisSlider;
 ofxDatGuiSlider* zAxisSlider;
 
+ofxDatGui* textureMenu;
+ofxDatGuiDropdown* textureMagFilterDropdown;
+ofxDatGuiDropdown* textureFilterDropdown;
+ofxDatGuiSlider* exposureSlider;
+ofxDatGuiSlider* gammaSlider;
+
+ofxDatGui* materialMenu;
+ofxDatGuiColorPicker* materialAmbiantCP;
+ofxDatGuiColorPicker* materialDiffuseCP;
+ofxDatGuiColorPicker* materialSpecularCP;
+
 void Application3d::setup(ofxDatGui* header)
 {
 	renderer.setup();
@@ -55,7 +66,7 @@ void Application3d::setup(ofxDatGui* header)
 	undoBtn->onButtonEvent(this, &Application3d::onUndoEvent);
 	ofxDatGuiButton* redoBtn = objectMenu->addButton("Redo");
 	redoBtn->onButtonEvent(this, &Application3d::onRedoEvent);	
-	vector<string> renderModeOptions = { "Wireframe", "Shader" };
+	vector<string> renderModeOptions = { "Wireframe", "Texture", "Lambert", "Phong", "Blinn-Phong"};
 	renderModeDropdown = objectMenu->addDropdown("Render Mode", renderModeOptions);
 	ofxDatGuiButton* addCylinderBtn = objectMenu->addButton("Add Cylinder");
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
@@ -79,9 +90,10 @@ void Application3d::setup(ofxDatGui* header)
 	selectionScrollView->setPosition(objectMenu->getWidth(), headerUi->getHeight() - 1);
 	selectionScrollView->setOpacity(0.1);
 
-	transformationMenu = new ofxDatGui(300, 300);
+	transformationMenu = new ofxDatGui(850, 250);
 	transformationMenu->addLabel("Transformation Menu");
 	transformationMenu->addHeader(":: Click here to drag ::");
+	transformationMenu->addFooter();
 	vector<string> transformationOptions = {"Translation", "Rotation", "Proportion"};
 	transformationDropdown = transformationMenu->addDropdown("Transformation Type", transformationOptions);
 	xAxisSlider = transformationMenu->addSlider("X", -1000, 1000, 0);
@@ -89,6 +101,37 @@ void Application3d::setup(ofxDatGui* header)
 	zAxisSlider = transformationMenu->addSlider("Z", -1000, 1000, 0);
 	ofxDatGuiButton* applyButton = transformationMenu->addButton("Apply");
 	applyButton->onButtonEvent(this, &Application3d::onApplyTransformationEvent);
+
+	textureMenu = new ofxDatGui(850, 460);
+	textureMenu->addLabel("Texture Menu");
+	textureMenu->addHeader(":: Click here to drag ::");
+	textureMenu->addFooter();
+	ofxDatGuiButton* textureImportBtn = textureMenu->addButton("Import");
+	textureImportBtn->onButtonEvent(this, &Application3d::onImportTextureEvent);
+	ofxDatGuiButton* randomTextureEvent = textureMenu->addButton("Random");
+	randomTextureEvent->onButtonEvent(this, &Application3d::onRandomTextureEvent);
+	vector<string> magFilterOptions = { "Nearest", "Linear" };
+	textureMagFilterDropdown = textureMenu->addDropdown("Image Scaling", magFilterOptions);
+	textureMagFilterDropdown->onDropdownEvent(this, &Application3d::onTextureMagFilterDropdownSelection);
+	vector<string> filterOptions = { "None", "Gaussian Blur", "Sharpen", "Edge Detect"};
+	textureFilterDropdown = textureMenu->addDropdown("Texture Filter", filterOptions);
+	textureFilterDropdown->onDropdownEvent(this, &Application3d::onTextureFilterDropdownSelection);
+	textureMenu->addLabel("Tone Mapping");
+	exposureSlider = textureMenu->addSlider("Exposure", 0, 5, 1);
+	exposureSlider->onSliderEvent(this, &Application3d::onToneMappingEvent);
+	gammaSlider = textureMenu->addSlider("Gamma", 0, 5, 2.2);
+	gammaSlider->onSliderEvent(this, &Application3d::onToneMappingEvent);
+
+	materialMenu = new ofxDatGui(50, 550);
+	materialMenu->addLabel("Material Menu");
+	materialMenu->addHeader(":: Click here to drag ::");
+	materialAmbiantCP = materialMenu->addColorPicker("Ambiant", ofFloatColor(0.1, 0.1, 0.1));
+	materialAmbiantCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
+	materialDiffuseCP = materialMenu->addColorPicker("Diffuse", ofFloatColor(0.0, 0.6, 0.6));
+	materialDiffuseCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
+	materialSpecularCP = materialMenu->addColorPicker("Specular", ofFloatColor(1.0, 0.0, 1.0));
+	materialSpecularCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
+	materialMenu->addFooter();
 }
 
 void Application3d::draw() {
@@ -105,7 +148,6 @@ void Application3d::draw() {
 	objectScrollView->draw(); 
 	selectionScrollView->setHeight(selectionScrollView->getNumItems() * 26);
 	selectionScrollView->draw();
-
 
 	float x = static_cast<float>(ofGetMouseX());
 	float y = static_cast<float>(ofGetMouseY());
@@ -161,16 +203,19 @@ void Application3d::update() {
 	if (isEPressed)
 		renderer.camera->boom(-5);
 
+
 }
 
 void Application3d::showUi() {
 	objectMenu->setVisible(true);
 	transformationMenu->setVisible(true);
+	textureMenu->setVisible(true);
 }
 
 void Application3d::hideUi() {
 	objectMenu->setVisible(false);
 	transformationMenu->setVisible(false);
+	textureMenu->setVisible(false);
 }
 
 void Application3d::keyPressed(int key) {
@@ -355,6 +400,131 @@ void Application3d::onDeleteEvent(ofxDatGuiButtonEvent e) {
 	}
 }
 
+void Application3d::onRandomTextureEvent(ofxDatGuiButtonEvent e) {
+	for (Object* object : selection) {
+		ofTexture texture;
+		ofPixels pixels;
+		int width = 256;
+		int height = 256;
+		pixels.allocate(width, height, OF_PIXELS_RGB);
+		float noiseScale = ofRandom(1);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				float noiseValue = ofNoise(x * noiseScale * ofRandom(1), y * noiseScale * ofRandom(1));
+				ofColor color(noiseValue * 255, noiseValue * 255, noiseValue * 255);
+				pixels.setColor(x, y, color);
+			}
+		}
+		object->texture.allocate(pixels);
+		object->filteredTexture.allocate(pixels);
+	}
+}
+
+void Application3d::onImportTextureEvent(ofxDatGuiButtonEvent e) {
+	ofLog() << "<app::import texture>";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an object");
+	if (openFileResult.bSuccess) {
+		for (Object* object : selection) {
+			ofLoadImage(object->texture, openFileResult.filePath);
+			object->filteredTexture = object->texture;
+		}
+		ofLog() << "<app::import - success>";
+	}
+	else {
+		ofLog() << "<app::import - failed>";
+	}
+}
+
+void Application3d::onTextureMagFilterDropdownSelection(ofxDatGuiDropdownEvent e) {
+	for (Object* object : selection) {
+		if (e.child == 0)
+			object->magFilter = GL_NEAREST;
+		if (e.child == 1)
+			object->magFilter = GL_LINEAR;
+	}
+}
+
+void Application3d::onTextureFilterDropdownSelection(ofxDatGuiDropdownEvent e) {
+	float kernel[9];
+	for (Object* object : selection) {
+		if (e.child == 0) {
+			object->filteredTexture = object->texture;
+			return;
+		}
+		if (e.child == 1) {
+			float gaussianBlurKernel[9] = 
+					{ 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0,
+					   1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0,
+					   1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0 };
+			copy(begin(gaussianBlurKernel), end(gaussianBlurKernel), begin(kernel));
+		}
+		if (e.child == 2) {
+			float sharpenKernel[9] = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
+			copy(begin(sharpenKernel), end(sharpenKernel), begin(kernel));
+		}
+		if (e.child == 3) {
+			float edgeDetectKernel[9] = { 0, 1, 0, 1, -4, 1, 0, 1, 0 };
+			copy(begin(edgeDetectKernel), end(edgeDetectKernel), begin(kernel));
+		}
+
+		int width = object->texture.getWidth();
+		int height = object->texture.getHeight();
+
+		ofPixels pixels;
+		object->texture.readToPixels(pixels);
+		ofImage redImage, greenImage, blueImage;
+		redImage.allocate(width, height, OF_IMAGE_GRAYSCALE);
+		greenImage.allocate(width, height, OF_IMAGE_GRAYSCALE);
+		blueImage.allocate(width, height, OF_IMAGE_GRAYSCALE);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int index = y * width + x;
+				redImage.getPixels()[index] = pixels[index * 3];
+				greenImage.getPixels()[index] = pixels[index * 3 + 1];
+				blueImage.getPixels()[index] = pixels[index * 3 + 2];
+			}
+		}
+		redImage.update();
+		greenImage.update();
+		blueImage.update();
+
+		ofImage filteredImage;
+		filteredImage.allocate(width, height, OF_IMAGE_COLOR);
+		for (int c = 0; c < 3; c++) {
+			for (int y = 1; y < height - 1; y++) {
+				for (int x = 1; x < width - 1; x++) {
+					float sum = 0.0;
+					for (int j = -1; j <= 1; j++) {
+						for (int i = -1; i <= 1; i++) {
+							int index = (y + j) * width + (x + i);
+							sum += pixels[index * 3 + c] * kernel[(j + 1) * 3 + (i + 1)];
+						}
+					}
+					int index = y * width + x;
+					filteredImage.getPixels()[index * 3 + c] = ofClamp(sum, 0, 255);
+				}
+			}
+		}
+		filteredImage.update();
+		object->filteredTexture.allocate(filteredImage);
+	}
+}
+
+void Application3d::onToneMappingEvent(ofxDatGuiSliderEvent e) {
+	for (Object* object : selection) {
+		object->exposure = exposureSlider->getValue();
+		object->gamma = gammaSlider->getValue();
+	}
+}
+
+void Application3d::onMaterialColorChangeEvent(ofxDatGuiColorPickerEvent e) {
+	for (Object* object : selection) {
+		object->materialAmbiant = materialAmbiantCP->getColor();
+		object->materialDiffuse = materialDiffuseCP->getColor();
+		object->materialSpecular = materialSpecularCP->getColor();
+	}
+}
+
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();
 	if (model->loadModel(path)) {
@@ -436,8 +606,14 @@ Renderer3d::RenderMode Application3d::getRenderMode() {
 	string renderMode = renderModeDropdown->getSelected()->getLabel();
 	if (renderMode == "Wireframe")
 		return Renderer3d::RenderMode::Wireframe;
-	if (renderMode == "Shader")
-		return Renderer3d::RenderMode::Shader;
+	if (renderMode == "Texture")
+		return Renderer3d::RenderMode::Texture;
+	if (renderMode == "Lambert")
+		return Renderer3d::RenderMode::Lambert;
+	if (renderMode == "Phong")
+		return Renderer3d::RenderMode::Phong;
+	if (renderMode == "Blinn-Phong")
+		return Renderer3d::RenderMode::Blinn_Phong;
 }
 
 void Application3d::addObject(Object* object, string filename) {

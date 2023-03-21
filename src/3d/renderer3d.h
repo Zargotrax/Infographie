@@ -5,7 +5,7 @@ class Renderer3d
 {
 public:
 
-	enum RenderMode { Wireframe, Shader};
+	enum RenderMode { Wireframe, Texture, Lambert, Phong, Blinn_Phong};
 	enum CameraMode { Perspective, Orthographic};
 
 	ofEasyCam* camera;
@@ -13,7 +13,11 @@ public:
 	Scene* scene;
 
 	ofLight light;
-	ofShader* shader;
+	ofShader* lambert;
+	ofShader* phong;
+	ofShader* blinnPhong;
+	ofShader* toneMapping;
+	ofImage cubemap[6];
 
 	void setup();
 

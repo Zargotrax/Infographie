@@ -4,14 +4,10 @@
 int main()
 {
 	ofGLFWWindowSettings windowSettings;
-	windowSettings.resizable = true;
+	windowSettings.resizable = false;
+	windowSettings.setGLVersion(4, 3);
+	windowSettings.numSamples = 4;
 	windowSettings.setSize(1250, 750);
-	windowSettings.setGLVersion(4, 6);
-
 	ofCreateWindow(windowSettings);
-
-	Application* application = new Application();
-
-	ofRunApp(application);
-
+	ofRunApp(new Application());
 }

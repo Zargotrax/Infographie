@@ -5,11 +5,11 @@ void SpherePrimitive::drawWireframeOverride() {
 }
 
 void SpherePrimitive::drawSolidOverride() {
-	sphere->drawFaces();
+	sphere->draw();
 }
 
 void SpherePrimitive::drawShaderOverride() {
-	sphere->drawFaces();
+	sphere->draw();
 }
 
 void SpherePrimitive::drawBoundingBoxOverride() {
@@ -18,7 +18,7 @@ void SpherePrimitive::drawBoundingBoxOverride() {
 	float scaleFactor = -1;
 	scale = (scale * scaleFactor) / 2;
 	ofVec3f pos1 = sphere->getPosition();
-	ofVec3f pos = { -pos1.x, pos1.y, -pos1.z };
+	ofVec3f pos = { pos1.x, pos1.y, -pos1.z };
 
 	ofVec3f v1 = { pos.x + scale.x, pos.y - scale.y, pos.z + scale.z };
 	ofVec3f v2 = { pos.x + scale.x, pos.y - scale.y, pos.z - scale.z };

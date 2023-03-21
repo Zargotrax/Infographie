@@ -18,3 +18,7 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 --17. ofxAssimpModelLoader: getMesh(): mesh id 1 out of range for total num meshes: 1--
 --18. when adding a cylinder the menu turns black--
 --19. investigate memory leak--
+
+20. Applying filtering to a png texture with transparency isnt working
+21. white wireframe? check shaders
+22. textures on teapot?
