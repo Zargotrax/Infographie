@@ -46,6 +46,12 @@
 		<ClCompile Include="src\3d\application3d.cpp">
 			<Filter>src\3d</Filter>
 		</ClCompile>
+		<ClCompile Include="src\3d\object\curve.cpp">
+			<Filter>src\3d\object</Filter>
+		</ClCompile>
+		<ClCompile Include="src\3d\object\customObject.cpp">
+			<Filter>src\3d\object</Filter>
+		</ClCompile>
 		<ClCompile Include="src\3d\object\cylinderPrimitive.cpp">
 			<Filter>src\3d\object</Filter>
 		</ClCompile>
@@ -69,6 +75,9 @@
 		</ClCompile>
 		<ClCompile Include="src\3d\renderer3d.cpp">
 			<Filter>src\3d</Filter>
+		</ClCompile>
+		<ClCompile Include="src\3d\util\triangulator.cpp">
+			<Filter>src\3d\util</Filter>
 		</ClCompile>
 		<ClCompile Include="src\main.cpp">
 			<Filter>src</Filter>
@@ -146,6 +155,9 @@
 		</Filter>
 		<Filter Include="src\3d\object">
 			<UniqueIdentifier>{0AE02D94-144D-2B0E-9D57-1467}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="src\3d\util">
+			<UniqueIdentifier>{DFFACCF5-5E3C-5A84-0FF8-14D6}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="src\ui">
 			<UniqueIdentifier>{34F0B3B1-2BDA-A36D-9F63-1753}</UniqueIdentifier>
@@ -254,6 +266,12 @@
 		<ClInclude Include="src\3d\application3d.h">
 			<Filter>src\3d</Filter>
 		</ClInclude>
+		<ClInclude Include="src\3d\object\curve.h">
+			<Filter>src\3d\object</Filter>
+		</ClInclude>
+		<ClInclude Include="src\3d\object\customObject.h">
+			<Filter>src\3d\object</Filter>
+		</ClInclude>
 		<ClInclude Include="src\3d\object\cylinderPrimitive.h">
 			<Filter>src\3d\object</Filter>
 		</ClInclude>
@@ -277,6 +295,9 @@
 		</ClInclude>
 		<ClInclude Include="src\3d\renderer3d.h">
 			<Filter>src\3d</Filter>
+		</ClInclude>
+		<ClInclude Include="src\3d\util\triangulator.h">
+			<Filter>src\3d\util</Filter>
 		</ClInclude>
 		<ClInclude Include="src\ofApp.h">
 			<Filter>src</Filter>

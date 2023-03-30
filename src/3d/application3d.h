@@ -65,6 +65,12 @@ public:
 
 	void onMaterialColorChangeEvent(ofxDatGuiColorPickerEvent e);
 
+	void onCurveControlPointPositionChangeEvent(ofxDatGuiSliderEvent e);
+
+	void onAddBezierCurveEvent(ofxDatGuiButtonEvent e);
+
+	void onAddCustomObjectEvent(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);

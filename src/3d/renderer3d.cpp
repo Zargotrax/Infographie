@@ -5,9 +5,6 @@ void Renderer3d::setup()
 	scene = new Scene();
 	camera = new ofEasyCam();
 
-	camera->setupPerspective();
-	camera->setDistance(1000);
-
 	toneMapping = new ofShader();
 	toneMapping->load("shaders/tone_mapping_330_vs.glsl", "shaders/tone_mapping_330_fs.glsl");
 

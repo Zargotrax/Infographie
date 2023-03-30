@@ -5,6 +5,8 @@
 #include "./3d/object/loadedFile.h"
 #include "./3d/object/cylinderPrimitive.h"
 #include "./3d/object/spherePrimitive.h"
+#include "./3d/object/curve.h"
+#include "./3d/object/customObject.h"
 
 bool exporting = false;
 bool isWPressed = false;
@@ -46,6 +48,12 @@ ofxDatGuiColorPicker* materialAmbiantCP;
 ofxDatGuiColorPicker* materialDiffuseCP;
 ofxDatGuiColorPicker* materialSpecularCP;
 
+ofxDatGui* curveMenu;
+ofxDatGuiDropdown* curvePointControlDropdown;
+ofxDatGuiSlider* curveXSlider;
+ofxDatGuiSlider* curveYSlider;
+ofxDatGuiSlider* curveZSlider;
+
 void Application3d::setup(ofxDatGui* header)
 {
 	renderer.setup();
@@ -72,6 +80,10 @@ void Application3d::setup(ofxDatGui* header)
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
 	ofxDatGuiButton* addShpereBtn = objectMenu->addButton("Add Sphere");
 	addShpereBtn->onButtonEvent(this, &Application3d::onAddSphereEvent);
+	ofxDatGuiButton* addBezierCurbeBtn = objectMenu->addButton("Add Bezier Curve");
+	addBezierCurbeBtn->onButtonEvent(this, &Application3d::onAddBezierCurveEvent);
+	ofxDatGuiButton* addCustomObjectBtn = objectMenu->addButton("Add Custom Object");
+	addCustomObjectBtn->onButtonEvent(this, &Application3d::onAddCustomObjectEvent);
 	ofxDatGuiButton* deleteBtn = objectMenu->addButton("Delete");
 	deleteBtn->onButtonEvent(this, &Application3d::onDeleteEvent);
 	ofxDatGuiButton* enableTurntableBtn = objectMenu->addButton("Enable Turntable");
@@ -132,6 +144,18 @@ void Application3d::setup(ofxDatGui* header)
 	materialSpecularCP = materialMenu->addColorPicker("Specular", ofFloatColor(1.0, 0.0, 1.0));
 	materialSpecularCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
 	materialMenu->addFooter();
+
+	curveMenu = new ofxDatGui(50, 350);
+	curveMenu->addLabel("Bezier Curve Menu");
+	curveMenu->addHeader(":: Click here to drag ::");
+	vector<string> curveControlPoints = { "1", "2", "3", "4" };
+	curvePointControlDropdown = curveMenu->addDropdown("Control Point", curveControlPoints);
+	curveXSlider = curveMenu->addSlider("Position X", -500, 500, 0);
+	curveXSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
+	curveYSlider =curveMenu->addSlider("Position Y", -500, 500, 0);
+	curveYSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
+	curveZSlider = curveMenu->addSlider("Position Z", -500, 500, 0);
+	curveZSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
 }
 
 void Application3d::draw() {
@@ -148,6 +172,15 @@ void Application3d::draw() {
 	objectScrollView->draw(); 
 	selectionScrollView->setHeight(selectionScrollView->getNumItems() * 26);
 	selectionScrollView->draw();
+	if (!selection.empty()) {
+		if (dynamic_cast<Curve*>(selection.at(0)) != nullptr) {
+			curveMenu->setVisible(true);
+		} else {
+			curveMenu->setVisible(false);
+		}
+	} else {
+		curveMenu->setVisible(false);
+	}
 
 	float x = static_cast<float>(ofGetMouseX());
 	float y = static_cast<float>(ofGetMouseY());
@@ -210,12 +243,16 @@ void Application3d::showUi() {
 	objectMenu->setVisible(true);
 	transformationMenu->setVisible(true);
 	textureMenu->setVisible(true);
+	materialMenu->setVisible(true);
+	curveMenu->setVisible(true);
 }
 
 void Application3d::hideUi() {
 	objectMenu->setVisible(false);
 	transformationMenu->setVisible(false);
 	textureMenu->setVisible(false);
+	materialMenu->setVisible(false);
+	curveMenu->setVisible(false);
 }
 
 void Application3d::keyPressed(int key) {
@@ -257,6 +294,17 @@ void Application3d::mousePressed(int x, int y, int button) {
 
 void Application3d::mouseReleased(int x, int y, int button) {
 	ofLog() << "Mouse release at : " << x << ", " << y;
+	if (button == 2 && !selection.empty()) { // right click
+		if (dynamic_cast<CustomObject*>(selection.at(0)) != nullptr) {
+			CustomObject* customObject = dynamic_cast<CustomObject*>(selection.at(0));
+			ofVec3f worldMouse = renderer.camera->screenToWorld(ofVec3f(x, y, 0));
+			ofVec3f direction = worldMouse - renderer.camera->getPosition();
+			direction.normalize();
+			glm::vec3 newPoint = renderer.camera->getPosition() + direction * 500;
+			customObject->triangulator->addPoint(newPoint.x, newPoint.y, newPoint.z);
+			customObject->triangulator->triangulate();
+		}
+	}
 }
 
 void Application3d::windowResized(int w, int h) {
@@ -333,7 +381,7 @@ void Application3d::onAddCylinderEvent(ofxDatGuiButtonEvent e) {
 	cylinderPrimitive->cylinder->setResolutionRadius(30);
 	cylinderPrimitive->cylinder->setPosition({ 0, 0, 0 });
 
-	std::string filename = "cylinder";
+	std::string filename = "Cylinder";
 	cylinderPrimitive->originalName = filename;
 	filename = getElementName(filename);
 	addObject(cylinderPrimitive, filename);
@@ -345,7 +393,7 @@ void Application3d::onAddSphereEvent(ofxDatGuiButtonEvent e) {
 	spherePrimitive->sphere->setRadius(100);
 	spherePrimitive->sphere->setPosition({ 0, 0, 0 });
 
-	std::string filename = "sphere";
+	std::string filename = "Sphere";
 	spherePrimitive->originalName = filename;
 	filename = getElementName(filename);
 	addObject(spherePrimitive, filename);
@@ -524,6 +572,37 @@ void Application3d::onMaterialColorChangeEvent(ofxDatGuiColorPickerEvent e) {
 		object->materialSpecular = materialSpecularCP->getColor();
 	}
 }
+
+void Application3d::onCurveControlPointPositionChangeEvent(ofxDatGuiSliderEvent e) {
+	if (!selection.empty()) {
+		if (dynamic_cast<Curve*>(selection.at(0)) != nullptr) {
+			Curve* curve = dynamic_cast<Curve*>(selection.at(0));
+			int controlPointsIndex = curvePointControlDropdown->getSelected()->getIndex();
+			curve->controlPoints[controlPointsIndex].x = curveXSlider->getValue();
+			curve->controlPoints[controlPointsIndex].y = curveYSlider->getValue();
+			curve->controlPoints[controlPointsIndex].z = curveZSlider->getValue();
+		}
+	}
+}
+
+void Application3d::onAddBezierCurveEvent(ofxDatGuiButtonEvent e) {
+	Curve* curve= new Curve();
+	std::string filename = "Bezier Curve";
+	curve->originalName = filename;
+	filename = getElementName(filename);
+	curve->name = filename;
+	addObject(curve, filename);
+}
+
+void Application3d::onAddCustomObjectEvent(ofxDatGuiButtonEvent e) {
+	CustomObject* customObject = new CustomObject();
+	std::string filename = "Custom Object";
+	customObject->originalName = filename;
+	filename = getElementName(filename);
+	customObject->name = filename;
+	addObject(customObject, filename);
+}
+
 
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();
