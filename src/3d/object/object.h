@@ -14,6 +14,7 @@ public:
 	vector<Object*> children;
 
 	ofTexture texture;
+	ofTexture normalMap;
 	ofTexture filteredTexture;
 	float magFilter = GL_LINEAR;
 	float exposure = 1.0f;

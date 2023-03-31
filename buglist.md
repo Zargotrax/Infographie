@@ -24,3 +24,4 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 22. textures on teapot?
 23. lambert missing spotlight
 24. naming is wrong when adding multiple object with the same name
+25. cant change the light color with the material menu

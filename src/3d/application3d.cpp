@@ -7,6 +7,7 @@
 #include "./3d/object/spherePrimitive.h"
 #include "./3d/object/curve.h"
 #include "./3d/object/customObject.h"
+#include "./3d/object/surface.h"
 
 bool exporting = false;
 bool isWPressed = false;
@@ -54,6 +55,12 @@ ofxDatGuiSlider* curveXSlider;
 ofxDatGuiSlider* curveYSlider;
 ofxDatGuiSlider* curveZSlider;
 
+ofxDatGui* surfaceMenu;
+ofxDatGuiDropdown* surfacePointControlDropdown;
+ofxDatGuiSlider* surfaceXSlider;
+ofxDatGuiSlider* surfaceYSlider;
+ofxDatGuiSlider* surfaceZSlider;
+
 void Application3d::setup(ofxDatGui* header)
 {
 	renderer.setup();
@@ -82,6 +89,8 @@ void Application3d::setup(ofxDatGui* header)
 	addShpereBtn->onButtonEvent(this, &Application3d::onAddSphereEvent);
 	ofxDatGuiButton* addBezierCurbeBtn = objectMenu->addButton("Add Bezier Curve");
 	addBezierCurbeBtn->onButtonEvent(this, &Application3d::onAddBezierCurveEvent);
+	ofxDatGuiButton* addBezierSurfaceBtn = objectMenu->addButton("Add Bezier Surface");
+	addBezierSurfaceBtn->onButtonEvent(this, &Application3d::onAddBezierSurfaceEvent);
 	ofxDatGuiButton* addCustomObjectBtn = objectMenu->addButton("Add Custom Object");
 	addCustomObjectBtn->onButtonEvent(this, &Application3d::onAddCustomObjectEvent);
 	ofxDatGuiButton* deleteBtn = objectMenu->addButton("Delete");
@@ -118,8 +127,10 @@ void Application3d::setup(ofxDatGui* header)
 	textureMenu->addLabel("Texture Menu");
 	textureMenu->addHeader(":: Click here to drag ::");
 	textureMenu->addFooter();
-	ofxDatGuiButton* textureImportBtn = textureMenu->addButton("Import");
+	ofxDatGuiButton* textureImportBtn = textureMenu->addButton("Import Diffuse Texture");
 	textureImportBtn->onButtonEvent(this, &Application3d::onImportTextureEvent);
+	ofxDatGuiButton* normalMapImportBtn = textureMenu->addButton("Import Normal Map");
+	normalMapImportBtn->onButtonEvent(this, &Application3d::onImportNormalMapEvent);
 	ofxDatGuiButton* randomTextureEvent = textureMenu->addButton("Random");
 	randomTextureEvent->onButtonEvent(this, &Application3d::onRandomTextureEvent);
 	vector<string> magFilterOptions = { "Nearest", "Linear" };
@@ -156,6 +167,19 @@ void Application3d::setup(ofxDatGui* header)
 	curveYSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
 	curveZSlider = curveMenu->addSlider("Position Z", -500, 500, 0);
 	curveZSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
+
+	surfaceMenu = new ofxDatGui(50, 350);
+	surfaceMenu->addLabel("Bezier Surface Menu");
+	surfaceMenu->addHeader(":: Click here to drag ::");
+	vector<string> surfaceControlPoints = { "0", "1", "2", "3", "4", "5", "6", "7", "8"};
+	surfacePointControlDropdown = surfaceMenu->addDropdown("Control Point", surfaceControlPoints);
+	surfacePointControlDropdown->onDropdownEvent(this, &Application3d::onSurfacePointControlSelectionEvent);
+	surfaceXSlider = surfaceMenu->addSlider("Position X", -500, 500, 0);
+	surfaceXSlider->onSliderEvent(this, &Application3d::onSurfaceControlPointPositionChangeEvent);
+	surfaceYSlider = surfaceMenu->addSlider("Position Y", -500, 500, 0);
+	surfaceYSlider->onSliderEvent(this, &Application3d::onSurfaceControlPointPositionChangeEvent);
+	surfaceZSlider = surfaceMenu->addSlider("Position Z", -500, 500, 0);
+	surfaceZSlider->onSliderEvent(this, &Application3d::onSurfaceControlPointPositionChangeEvent);
 }
 
 void Application3d::draw() {
@@ -175,11 +199,15 @@ void Application3d::draw() {
 	if (!selection.empty()) {
 		if (dynamic_cast<Curve*>(selection.at(0)) != nullptr) {
 			curveMenu->setVisible(true);
+		} else if (dynamic_cast<Surface*>(selection.at(0)) != nullptr) {
+			surfaceMenu->setVisible(true);
 		} else {
 			curveMenu->setVisible(false);
+			surfaceMenu->setVisible(false);
 		}
 	} else {
 		curveMenu->setVisible(false);
+		surfaceMenu->setVisible(false);
 	}
 
 	float x = static_cast<float>(ofGetMouseX());
@@ -245,6 +273,7 @@ void Application3d::showUi() {
 	textureMenu->setVisible(true);
 	materialMenu->setVisible(true);
 	curveMenu->setVisible(true);
+	surfaceMenu->setVisible(true);
 }
 
 void Application3d::hideUi() {
@@ -253,6 +282,7 @@ void Application3d::hideUi() {
 	textureMenu->setVisible(false);
 	materialMenu->setVisible(false);
 	curveMenu->setVisible(false);
+	surfaceMenu->setVisible(false);
 }
 
 void Application3d::keyPressed(int key) {
@@ -470,7 +500,7 @@ void Application3d::onRandomTextureEvent(ofxDatGuiButtonEvent e) {
 
 void Application3d::onImportTextureEvent(ofxDatGuiButtonEvent e) {
 	ofLog() << "<app::import texture>";
-	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an object");
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
 	if (openFileResult.bSuccess) {
 		for (Object* object : selection) {
 			ofLoadImage(object->texture, openFileResult.filePath);
@@ -603,6 +633,54 @@ void Application3d::onAddCustomObjectEvent(ofxDatGuiButtonEvent e) {
 	addObject(customObject, filename);
 }
 
+void Application3d::onImportNormalMapEvent(ofxDatGuiButtonEvent e) {
+	ofLog() << "<app::import normal map>";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
+	if (openFileResult.bSuccess) {
+		for (Object* object : selection) {
+			ofLoadImage(object->normalMap, openFileResult.filePath);
+		}
+		ofLog() << "<app::import - success>";
+	}
+	else {
+		ofLog() << "<app::import - failed>";
+	}
+}
+
+void Application3d::onAddBezierSurfaceEvent(ofxDatGuiButtonEvent e) {
+	Surface* surface = new Surface();
+	surface->bezierSurface->setup(250, 250, 3, 36);
+	std::string filename = "Bezier Surface";
+	surface->originalName = filename;
+	filename = getElementName(filename);
+	surface->name = filename;
+	addObject(surface, filename);
+}
+
+void Application3d::onSurfaceControlPointPositionChangeEvent(ofxDatGuiSliderEvent e) {
+	if (!selection.empty()) {
+		if (dynamic_cast<Surface*>(selection.at(0)) != nullptr) {
+			Surface* surface = dynamic_cast<Surface*>(selection.at(0));
+			int controlPointsIndex = surfacePointControlDropdown->getSelected()->getIndex();
+			surface->bezierSurface->modifyControlPoint(controlPointsIndex, 
+				ofVec3f(surfaceXSlider->getValue(), surfaceYSlider->getValue(), surfaceZSlider->getValue()));
+			surface->bezierSurface->update();
+		}
+	}
+}
+
+void Application3d::onSurfacePointControlSelectionEvent(ofxDatGuiDropdownEvent e) {
+	if (!selection.empty()) {
+		if (dynamic_cast<Surface*>(selection.at(0)) != nullptr) {
+			Surface* surface = dynamic_cast<Surface*>(selection.at(0));
+			int controlPointsIndex = surfacePointControlDropdown->getSelected()->getIndex();
+			ofVec3f controlPoint = surface->bezierSurface->getControlPoint(controlPointsIndex);
+			surfaceXSlider->setValue(controlPoint.x);
+			surfaceYSlider->setValue(controlPoint.y);
+			surfaceZSlider->setValue(controlPoint.z);
+		}
+	}
+}
 
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();

@@ -70,11 +70,17 @@
 		<ClCompile Include="src\3d\object\spherePrimitive.cpp">
 			<Filter>src\3d\object</Filter>
 		</ClCompile>
+		<ClCompile Include="src\3d\object\surface.cpp">
+			<Filter>src\3d\object</Filter>
+		</ClCompile>
 		<ClCompile Include="src\3d\object\transformation.cpp">
 			<Filter>src\3d\object</Filter>
 		</ClCompile>
 		<ClCompile Include="src\3d\renderer3d.cpp">
 			<Filter>src\3d</Filter>
+		</ClCompile>
+		<ClCompile Include="src\3d\util\bezierSurface.cpp">
+			<Filter>src\3d\util</Filter>
 		</ClCompile>
 		<ClCompile Include="src\3d\util\triangulator.cpp">
 			<Filter>src\3d\util</Filter>
@@ -290,11 +296,17 @@
 		<ClInclude Include="src\3d\object\spherePrimitive.h">
 			<Filter>src\3d\object</Filter>
 		</ClInclude>
+		<ClInclude Include="src\3d\object\surface.h">
+			<Filter>src\3d\object</Filter>
+		</ClInclude>
 		<ClInclude Include="src\3d\object\transformation.h">
 			<Filter>src\3d\object</Filter>
 		</ClInclude>
 		<ClInclude Include="src\3d\renderer3d.h">
 			<Filter>src\3d</Filter>
+		</ClInclude>
+		<ClInclude Include="src\3d\util\bezierSurface.h">
+			<Filter>src\3d\util</Filter>
 		</ClInclude>
 		<ClInclude Include="src\3d\util\triangulator.h">
 			<Filter>src\3d\util</Filter>

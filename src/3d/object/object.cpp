@@ -105,6 +105,9 @@ void Object::drawShader(ofShader* shader) {
 	shader->setUniform1f("projectorLight.outerCutoffAngle", 30.0);
 	shader->setUniform3f("projectorLight.color", 1.0, 1.0, 0.0);
 
+	shader->setUniformTexture("diffuseMap", filteredTexture, 0);
+	shader->setUniformTexture("normalMap", normalMap, 1);
+
 	ofFloatColor ambiant = ofFloatColor(materialAmbiant);
 	shader->setUniform3f("material.ambiant", ambiant.r, ambiant.g, ambiant.b);
 	ofFloatColor diffuse = ofFloatColor(materialDiffuse);

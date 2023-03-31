@@ -71,6 +71,14 @@ public:
 
 	void onAddCustomObjectEvent(ofxDatGuiButtonEvent e);
 
+	void onImportNormalMapEvent(ofxDatGuiButtonEvent e);
+
+	void onAddBezierSurfaceEvent(ofxDatGuiButtonEvent e);
+
+	void onSurfaceControlPointPositionChangeEvent(ofxDatGuiSliderEvent e);
+
+	void onSurfacePointControlSelectionEvent(ofxDatGuiDropdownEvent e);
+
 private:
 
 	void import(string path);
