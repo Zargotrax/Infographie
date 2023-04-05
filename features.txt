@@ -49,14 +49,18 @@
 8.4 DONE
 8.5 DONE
 
-9.1
-9.2
-9.3
-9.4
-9.5
+9.1 DONE
+9.2 DONE
+9.3 ---
+9.4 DONE
+9.5 DONE
 
-10.1
-10.2
-10.3
-10.4
-10.5
+10.1 ---
+10.2 ---
+10.3 WIP
+10.4 WIP
+10.5 ---
+
+
+https://github.com/obviousjim/ofxDelaunay
+https://github.com/charlesveasey/ofxBezierSurface

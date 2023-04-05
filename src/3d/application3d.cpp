@@ -1,13 +1,6 @@
 #include "application3d.h"
-#include "./3d/object/object.h"
-#include "./3d/object/transformation.h"
-#include "./3d/object/operation.h"
-#include "./3d/object/loadedFile.h"
-#include "./3d/object/cylinderPrimitive.h"
-#include "./3d/object/spherePrimitive.h"
-#include "./3d/object/curve.h"
-#include "./3d/object/customObject.h"
-#include "./3d/object/surface.h"
+#include "./3d/object/drawable3d.h"
+#include "./3d/util/rayTracer.h"
 
 bool exporting = false;
 bool isWPressed = false;
@@ -48,6 +41,13 @@ ofxDatGui* materialMenu;
 ofxDatGuiColorPicker* materialAmbiantCP;
 ofxDatGuiColorPicker* materialDiffuseCP;
 ofxDatGuiColorPicker* materialSpecularCP;
+ofxDatGuiSlider* materialMetallicSlider;
+ofxDatGuiSlider* materialRoughnessSlider;
+ofxDatGuiSlider* materialOcclusionSlider;
+ofxDatGuiSlider* materialBrightnessSlider;
+ofxDatGuiColorPicker* materialFresnelIorColorPicker;
+
+ofxDatGui* lightMenu;
 
 ofxDatGui* curveMenu;
 ofxDatGuiDropdown* curvePointControlDropdown;
@@ -81,7 +81,7 @@ void Application3d::setup(ofxDatGui* header)
 	undoBtn->onButtonEvent(this, &Application3d::onUndoEvent);
 	ofxDatGuiButton* redoBtn = objectMenu->addButton("Redo");
 	redoBtn->onButtonEvent(this, &Application3d::onRedoEvent);	
-	vector<string> renderModeOptions = { "Wireframe", "Texture", "Lambert", "Phong", "Blinn-Phong"};
+	vector<string> renderModeOptions = { "Wireframe", "Texture", "Lambert", "Phong", "Blinn-Phong", "PBR"};
 	renderModeDropdown = objectMenu->addDropdown("Render Mode", renderModeOptions);
 	ofxDatGuiButton* addCylinderBtn = objectMenu->addButton("Add Cylinder");
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
@@ -101,6 +101,8 @@ void Application3d::setup(ofxDatGui* header)
 	enableTranslationAnimBtn->onButtonEvent(this, &Application3d::onEnableTranslationAnimation);
 	ofxDatGuiButton* changeCameraModeBtn = objectMenu->addButton("Switch Camera Mode");
 	changeCameraModeBtn->onButtonEvent(this, &Application3d::onChangeCameraMode);
+	ofxDatGuiButton* renderRayTracingBtn = objectMenu->addButton("Render Ray Tracing");
+	renderRayTracingBtn->onButtonEvent(this, &Application3d::onRayTracingRenderEvent);
 
 	objectScrollView = new ofxDatGuiScrollView("My scroll view", 100);
 	objectScrollView->setWidth(255);
@@ -112,8 +114,7 @@ void Application3d::setup(ofxDatGui* header)
 	selectionScrollView->setOpacity(0.1);
 
 	transformationMenu = new ofxDatGui(850, 250);
-	transformationMenu->addLabel("Transformation Menu");
-	transformationMenu->addHeader(":: Click here to drag ::");
+	transformationMenu->addHeader("Transformation Menu");
 	transformationMenu->addFooter();
 	vector<string> transformationOptions = {"Translation", "Rotation", "Proportion"};
 	transformationDropdown = transformationMenu->addDropdown("Transformation Type", transformationOptions);
@@ -124,13 +125,18 @@ void Application3d::setup(ofxDatGui* header)
 	applyButton->onButtonEvent(this, &Application3d::onApplyTransformationEvent);
 
 	textureMenu = new ofxDatGui(850, 460);
-	textureMenu->addLabel("Texture Menu");
-	textureMenu->addHeader(":: Click here to drag ::");
+	textureMenu->addHeader("Texture Menu");
 	textureMenu->addFooter();
 	ofxDatGuiButton* textureImportBtn = textureMenu->addButton("Import Diffuse Texture");
 	textureImportBtn->onButtonEvent(this, &Application3d::onImportTextureEvent);
 	ofxDatGuiButton* normalMapImportBtn = textureMenu->addButton("Import Normal Map");
 	normalMapImportBtn->onButtonEvent(this, &Application3d::onImportNormalMapEvent);
+	ofxDatGuiButton* metallicMapImportBtn = textureMenu->addButton("Import Metallic Map");
+	metallicMapImportBtn->onButtonEvent(this, &Application3d::onImportMetallicMapEvent);
+	ofxDatGuiButton* roughnessMapImportBtn = textureMenu->addButton("Import Roughness Map");
+	roughnessMapImportBtn->onButtonEvent(this, &Application3d::onImportRoughnesslMapEvent);
+	ofxDatGuiButton* occlusionMapImportBtn = textureMenu->addButton("Import Occlusion Map");
+	occlusionMapImportBtn->onButtonEvent(this, &Application3d::onImportOcclusionMapEvent);
 	ofxDatGuiButton* randomTextureEvent = textureMenu->addButton("Random");
 	randomTextureEvent->onButtonEvent(this, &Application3d::onRandomTextureEvent);
 	vector<string> magFilterOptions = { "Nearest", "Linear" };
@@ -146,19 +152,43 @@ void Application3d::setup(ofxDatGui* header)
 	gammaSlider->onSliderEvent(this, &Application3d::onToneMappingEvent);
 
 	materialMenu = new ofxDatGui(50, 550);
-	materialMenu->addLabel("Material Menu");
-	materialMenu->addHeader(":: Click here to drag ::");
-	materialAmbiantCP = materialMenu->addColorPicker("Ambiant", ofFloatColor(0.1, 0.1, 0.1));
+	materialMenu->addHeader("Material Menu");
+	ofxDatGuiFolder* colorFolder = materialMenu->addFolder("Color");
+	materialAmbiantCP = colorFolder->addColorPicker("Ambiant", ofFloatColor(0.1, 0.1, 0.1));
 	materialAmbiantCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
-	materialDiffuseCP = materialMenu->addColorPicker("Diffuse", ofFloatColor(0.0, 0.6, 0.6));
+	materialDiffuseCP = colorFolder->addColorPicker("Diffuse", ofFloatColor(0.0, 0.6, 0.6));
 	materialDiffuseCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
-	materialSpecularCP = materialMenu->addColorPicker("Specular", ofFloatColor(1.0, 0.0, 1.0));
+	materialSpecularCP = colorFolder->addColorPicker("Specular", ofFloatColor(1.0, 0.0, 1.0));
 	materialSpecularCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
+	ofxDatGuiFolder* factorFolder = materialMenu->addFolder("Factor");
+	ofxDatGuiSlider* materialMetallicSlider = factorFolder->addSlider("Metallic", 0, 1, 0.5);
+	materialMetallicSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
+	ofxDatGuiSlider* materialRoughnessSlider = factorFolder->addSlider("Roughness", 0, 1, 0.5);
+	materialRoughnessSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
+	ofxDatGuiSlider* materialOcclusionSlider = factorFolder->addSlider("Occlusion", 0, 5, 1);
+	materialOcclusionSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
+	ofxDatGuiSlider* materialBrightnessSlider = factorFolder->addSlider("Brightness", 0, 5, 1);
+	materialBrightnessSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
+	ofxDatGuiColorPicker* materialFresnelIorColorPicker = materialMenu->addColorPicker("Fresnel IOR");
+	materialFresnelIorColorPicker->onColorPickerEvent(this, &Application3d::onMaterialFactorIorChangeEvent);
 	materialMenu->addFooter();
 
+	lightMenu = new ofxDatGui(50, 430);
+	lightMenu->addHeader("Light Menu");
+	ofxDatGuiFolder* ambiantLightFolder = lightMenu->addFolder("Ambiant Light");
+	ambiantLightFolder->addColorPicker("Color");
+	ofxDatGuiFolder* pointLightFolder = lightMenu->addFolder("Point Light");
+	pointLightFolder->addColorPicker("Color");
+	pointLightFolder->addSlider("Brightness", 0, 1, 1);
+	ofxDatGuiFolder* directionalLightFolder = lightMenu->addFolder("Directional Light");
+	directionalLightFolder->addColorPicker("Color");
+	directionalLightFolder->addSlider("Brightness", 0, 1, 1);
+	ofxDatGuiFolder* projectorLightFolder = lightMenu->addFolder("Projector Light");
+	directionalLightFolder->addColorPicker("Color");
+	directionalLightFolder->addSlider("Brightness", 0, 1, 1);
+
 	curveMenu = new ofxDatGui(50, 350);
-	curveMenu->addLabel("Bezier Curve Menu");
-	curveMenu->addHeader(":: Click here to drag ::");
+	curveMenu->addHeader("Bezier Curve Menu");
 	vector<string> curveControlPoints = { "1", "2", "3", "4" };
 	curvePointControlDropdown = curveMenu->addDropdown("Control Point", curveControlPoints);
 	curveXSlider = curveMenu->addSlider("Position X", -500, 500, 0);
@@ -169,8 +199,7 @@ void Application3d::setup(ofxDatGui* header)
 	curveZSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
 
 	surfaceMenu = new ofxDatGui(50, 350);
-	surfaceMenu->addLabel("Bezier Surface Menu");
-	surfaceMenu->addHeader(":: Click here to drag ::");
+	surfaceMenu->addHeader("Bezier Surface Menu");
 	vector<string> surfaceControlPoints = { "0", "1", "2", "3", "4", "5", "6", "7", "8"};
 	surfacePointControlDropdown = surfaceMenu->addDropdown("Control Point", surfaceControlPoints);
 	surfacePointControlDropdown->onDropdownEvent(this, &Application3d::onSurfacePointControlSelectionEvent);
@@ -682,6 +711,74 @@ void Application3d::onSurfacePointControlSelectionEvent(ofxDatGuiDropdownEvent e
 	}
 }
 
+void Application3d::onRayTracingRenderEvent(ofxDatGuiButtonEvent e) {
+	auto render = [](ofCamera* camera, Scene* scene) {
+		RayTracer* rayTracer = new RayTracer();
+		rayTracer->run(camera, scene);
+		delete rayTracer;
+	};
+
+	thread task(render, renderer.camera, renderer.scene);
+	task.detach();
+}
+
+void Application3d::onMaterialFactorChangeEvent(ofxDatGuiSliderEvent e) {
+	for (Object* object : selection) {
+		object->materialMetallic = materialMetallicSlider->getValue();
+		object->materialRoughness = materialRoughnessSlider->getValue();
+		object->materialOcclusion = materialOcclusionSlider->getValue();
+		object->materialBrightness = materialBrightnessSlider->getValue();
+	}
+}
+
+void Application3d::onMaterialFactorIorChangeEvent(ofxDatGuiColorPickerEvent e) {
+	for (Object* object : selection) {
+		object->materialIor = materialFresnelIorColorPicker->getColor();
+	}
+}
+
+void Application3d::onImportMetallicMapEvent(ofxDatGuiButtonEvent e) {
+	ofLog() << "<app::import metallic map>";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
+	if (openFileResult.bSuccess) {
+		for (Object* object : selection) {
+			ofLoadImage(object->metallicMap, openFileResult.filePath);
+		}
+		ofLog() << "<app::import - success>";
+	}
+	else {
+		ofLog() << "<app::import - failed>";
+	}
+}
+
+void Application3d::onImportRoughnesslMapEvent(ofxDatGuiButtonEvent e) {
+	ofLog() << "<app::import roughness map>";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
+	if (openFileResult.bSuccess) {
+		for (Object* object : selection) {
+			ofLoadImage(object->roughnessMap, openFileResult.filePath);
+		}
+		ofLog() << "<app::import - success>";
+	}
+	else {
+		ofLog() << "<app::import - failed>";
+	}
+}
+
+void Application3d::onImportOcclusionMapEvent(ofxDatGuiButtonEvent e) {
+	ofLog() << "<app::import occlusion map>";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select an image");
+	if (openFileResult.bSuccess) {
+		for (Object* object : selection) {
+			ofLoadImage(object->occlusionMap, openFileResult.filePath);
+		}
+		ofLog() << "<app::import - success>";
+	}
+	else {
+		ofLog() << "<app::import - failed>";
+	}
+}
+
 void Application3d::import(string path) {
 	ofxAssimpModelLoader* model = new ofxAssimpModelLoader();
 	if (model->loadModel(path)) {
@@ -771,6 +868,8 @@ Renderer3d::RenderMode Application3d::getRenderMode() {
 		return Renderer3d::RenderMode::Phong;
 	if (renderMode == "Blinn-Phong")
 		return Renderer3d::RenderMode::Blinn_Phong;
+	if (renderMode == "PBR")
+		return Renderer3d::RenderMode::PBR;
 }
 
 void Application3d::addObject(Object* object, string filename) {

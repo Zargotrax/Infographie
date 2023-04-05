@@ -79,6 +79,18 @@ public:
 
 	void onSurfacePointControlSelectionEvent(ofxDatGuiDropdownEvent e);
 
+	void onRayTracingRenderEvent(ofxDatGuiButtonEvent e); 
+	
+	void onMaterialFactorChangeEvent(ofxDatGuiSliderEvent e);
+
+	void onMaterialFactorIorChangeEvent(ofxDatGuiColorPickerEvent e);
+
+	void onImportMetallicMapEvent(ofxDatGuiButtonEvent e);
+
+	void onImportRoughnesslMapEvent(ofxDatGuiButtonEvent e);
+
+	void onImportOcclusionMapEvent(ofxDatGuiButtonEvent e);
+
 private:
 
 	void import(string path);

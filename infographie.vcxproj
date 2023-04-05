@@ -207,6 +207,7 @@
     <ClCompile Include="src\3d\object\transformation.cpp" />
     <ClCompile Include="src\3d\renderer3d.cpp" />
     <ClCompile Include="src\3d\util\bezierSurface.cpp" />
+    <ClCompile Include="src\3d\util\rayTracer.cpp" />
     <ClCompile Include="src\3d\util\triangulator.cpp" />
     <ClCompile Include="src\ui\histogramComponent.cpp" />
     <ClCompile Include="..\of_v0.11.2_vs2017_release\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="src\3d\object\transformation.h" />
     <ClInclude Include="src\3d\renderer3d.h" />
     <ClInclude Include="src\3d\util\bezierSurface.h" />
+    <ClInclude Include="src\3d\util\rayTracer.h" />
     <ClInclude Include="src\3d\util\triangulator.h" />
     <ClInclude Include="src\ui\histogramComponent.h" />
     <ClInclude Include="..\of_v0.11.2_vs2017_release\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.h" />

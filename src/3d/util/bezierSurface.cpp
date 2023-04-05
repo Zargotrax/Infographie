@@ -59,9 +59,14 @@ void BezierSurface::update() {
 
 void BezierSurface::drawControls() {
     ofSetColor(ofColor::black);
+    int index = 0;
     for (vector<ofVec3f> column : inp) {
         for (ofVec3f ctrlPts : column) {
+            ofSetColor(ofColor::black);
             ofDrawSphere(ctrlPts, 3);
+            ofSetColor(ofColor::white);
+            ofDrawBitmapString(to_string(index), ctrlPts);
+            index++;
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
+#include "light.h"
 
 #ifndef OBJECT_H
 #define OBJECT_H
@@ -10,24 +11,38 @@ public:
 	string name;
 	string originalName;
 
+	// 
 	Object* parent;
 	vector<Object*> children;
 
+	// Textures
 	ofTexture texture;
-	ofTexture normalMap;
 	ofTexture filteredTexture;
+	ofTexture normalMap;
+	ofTexture metallicMap;
+	ofTexture roughnessMap;
+	ofTexture occlusionMap;
 	float magFilter = GL_LINEAR;
 	float exposure = 1.0f;
 	float gamma = 2.2f;
 
+	// Material
 	ofColor materialAmbiant = ofFloatColor(0.1, 0.1, 0.1);
 	ofColor materialDiffuse = ofFloatColor(0.0, 0.6, 0.6);
 	ofColor materialSpecular = ofFloatColor(1.0, 0.0, 1.0);
+	ofColor materialIor = ofFloatColor(0.04, 0.04, 0.04);
 
+	float materialMetallic = 0.5f;
+	float materialRoughness = 0.5f;
+	float materialOcclusion = 1.0f;
+	float materialBrightness = 1.0f;
+	
+	// Misc
 	bool selected = true;
 	bool rotation_animation = false;
 	bool translation_animation = false;
-
+	
+	// Transfom
 	float rotationX = 0;
 	float rotationY = 0;
 	float rotationZ = 0;
@@ -40,6 +55,7 @@ public:
 	float scaleY = 1;
 	float scaleZ = 1;
 
+
 	void drawWireframe();
 	virtual void drawWireframeOverride() = 0;
 
@@ -48,6 +64,7 @@ public:
 
 	void drawTexture(ofShader* toneMapping);
 	void drawShader(ofShader* shader);
+	void drawPBR(ofShader* shader, Light pointLight);
 	virtual void drawShaderOverride() = 0;
 
 	void checkIfSelected();

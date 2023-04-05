@@ -82,6 +82,9 @@
 		<ClCompile Include="src\3d\util\bezierSurface.cpp">
 			<Filter>src\3d\util</Filter>
 		</ClCompile>
+		<ClCompile Include="src\3d\util\rayTracer.cpp">
+			<Filter>src\3d\util</Filter>
+		</ClCompile>
 		<ClCompile Include="src\3d\util\triangulator.cpp">
 			<Filter>src\3d\util</Filter>
 		</ClCompile>
@@ -306,6 +309,9 @@
 			<Filter>src\3d</Filter>
 		</ClInclude>
 		<ClInclude Include="src\3d\util\bezierSurface.h">
+			<Filter>src\3d\util</Filter>
+		</ClInclude>
+		<ClInclude Include="src\3d\util\rayTracer.h">
 			<Filter>src\3d\util</Filter>
 		</ClInclude>
 		<ClInclude Include="src\3d\util\triangulator.h">

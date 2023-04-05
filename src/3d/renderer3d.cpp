@@ -4,6 +4,8 @@ void Renderer3d::setup()
 {
 	scene = new Scene();
 	camera = new ofEasyCam();
+	camera->setOrientation(glm::vec3(0, -0.042612, -1));
+	camera->setPosition(50, 50, 300);
 
 	toneMapping = new ofShader();
 	toneMapping->load("shaders/tone_mapping_330_vs.glsl", "shaders/tone_mapping_330_fs.glsl");
@@ -17,10 +19,8 @@ void Renderer3d::setup()
 	blinnPhong = new ofShader();
 	blinnPhong->load("shaders/basic_shader.vert", "shaders/blinn-phong.frag");
 
-	light.enable();
-	light.setPosition(ofVec3f(100, 100, 500));
-	light.lookAt(ofVec3f(0, 0, 0));
-
+	pbr = new ofShader();
+	pbr->load("shaders/pbr_330_vs.glsl", "shaders/pbr_330_fs.glsl");
 }
 
 void Renderer3d::update() {
@@ -58,6 +58,9 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 			case Renderer3d::RenderMode::Blinn_Phong:
 				object->drawShader(blinnPhong);
 			break;
+			case Renderer3d::RenderMode::PBR:
+				object->drawShader(blinnPhong);
+				break;
 		}
 
 		ofSetColor(ofColor::orangeRed);
