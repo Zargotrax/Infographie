@@ -27,9 +27,9 @@ public:
 	float gamma = 2.2f;
 
 	// Material
-	ofColor materialAmbiant = ofFloatColor(0.1, 0.1, 0.1);
-	ofColor materialDiffuse = ofFloatColor(0.0, 0.6, 0.6);
-	ofColor materialSpecular = ofFloatColor(1.0, 0.0, 1.0);
+	ofColor materialAmbiant = ofColor(63, 63, 63);
+	ofColor materialDiffuse = ofColor(255, 255, 255);
+	ofColor materialSpecular = ofColor(255, 255, 255);
 	ofColor materialIor = ofFloatColor(0.04, 0.04, 0.04);
 
 	float materialMetallic = 0.5f;
@@ -59,12 +59,9 @@ public:
 	void drawWireframe();
 	virtual void drawWireframeOverride() = 0;
 
-	void drawSolid();
-	virtual void drawSolidOverride() = 0;
-
 	void drawTexture(ofShader* toneMapping);
-	void drawShader(ofShader* shader);
-	void drawPBR(ofShader* shader, Light pointLight);
+	void drawShader(ofShader* shader, Light ambiantLight, Light pointLight, Light directionalLight, Light spotLight);
+	void drawPBR(ofShader* shader, Light pointLight, Light directionalLight, Light spotLight);
 	virtual void drawShaderOverride() = 0;
 
 	void checkIfSelected();

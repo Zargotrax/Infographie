@@ -4,10 +4,6 @@ void SpherePrimitive::drawWireframeOverride() {
 	sphere->drawWireframe();
 }
 
-void SpherePrimitive::drawSolidOverride() {
-	sphere->draw();
-}
-
 void SpherePrimitive::drawShaderOverride() {
 	sphere->draw();
 }

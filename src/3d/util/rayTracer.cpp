@@ -131,14 +131,17 @@ bool rayIntersectsBox(const Ray& ray, const ofPoint& min, const ofPoint& max) {
     return t_max >= t_min;
 }
 
-vector<Vector> vertex;
-vector<Vector> edge1;
-vector<Vector> edge2;
+//vector<Vector> vertex;
+//vector<Vector> edge1;
+//vector<Vector> edge2;
 struct Model : Element {
     ofMesh mesh;
     ofPoint min;
     ofPoint max;
     glm::mat4 mat;
+    vector<Vector> vertex;
+    vector<Vector> edge1;
+    vector<Vector> edge2;
 
     Model(ofMesh ofmesh, ofPoint mini, ofPoint maxi, glm::mat4 mat, Vector p, Vector e, Vector c, SurfaceType m)
         : Element(p, e, c, m) {
@@ -561,13 +564,14 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
 
     image_width = 320;
     image_height = 320;
-    ray_per_pixel = 16;
+    ray_per_pixel = 32;
 
     constexpr double anchor = 1e5;
     constexpr double wall_radius = anchor;
 
     scene.clear();
 
+    // Walls
     scene.push_back(&Sphere(wall_radius, Vector(0, -anchor - 50, 0), Vector(), Vector(0.75, 0.75, 0.75), SurfaceType::diffuse));    // plancher
     scene.push_back(&Sphere(wall_radius, Vector(0, anchor + 50, 0), Vector(), Vector(0.75, 0.75, 0.75), SurfaceType::diffuse));    // plafond
     scene.push_back(&Sphere(wall_radius, Vector(anchor - 50, 0, 0), Vector(), Vector(0.75, 0.25, 0.25), SurfaceType::diffuse));    // mur gauche
@@ -578,11 +582,11 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
 
 
     //scene.push_back(&Sphere(20, Vector(-25, -10, 20), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
-    scene.push_back(&Sphere(20, Vector(-25, -10, 20), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
-    scene.push_back(&Sphere(20, Vector(25, 15, -10), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
-    scene.push_back(&Cube(40, Vector(), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
-    scene.push_back(&Sphere(20, Vector(0, 60, 20), Vector(5, 5, 5), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
-    scene.push_back(&Sphere(20, Vector(0, -25, 250), Vector(5, 5, 5), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
+    scene.push_back(&Sphere(20, Vector(-25, -10, 20), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
+    scene.push_back(&Sphere(20, Vector(25, 15, -10), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
+    //scene.push_back(&Cube(40, Vector(), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
+    scene.push_back(&Sphere(20, Vector(0, 60, 20), Vector(15, 15, 15), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
+    scene.push_back(&Sphere(20, Vector(0, -25, 250), Vector(15, 15, 15), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
 
     //scene.push_back(&Sphere(3, Vector(0, 0, 0), Vector(1, 1, 1), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
 
@@ -604,7 +608,7 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
 
             Model* model = new Model(loadedFile->model->getMesh(0),
                 loadedFile->model->getSceneMin(), loadedFile->model->getSceneMax(), trans,
-                Vector(0, 0, 0), Vector(), Vector(0.7, 0.7, 0.7), SurfaceType::specular);
+                Vector(0, 0, 50), Vector(), Vector(1, 1, 1), SurfaceType::refraction);
             scene.push_back(model);
         }
 

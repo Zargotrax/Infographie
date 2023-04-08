@@ -1,15 +1,13 @@
 #include "loadedFile.h"
 
 void LoadedFile::drawWireframeOverride() {
+	ofScale(-1, -1, 1);
 	model->drawWireframe();
 }
 
-
-void LoadedFile::drawSolidOverride() {
-	model->drawFaces();
-}
-
 void LoadedFile::drawShaderOverride() {
+	ofScale(-1, -1, 1);
+
 	model->disableMaterials();
 
 	model->drawFaces();
@@ -17,8 +15,9 @@ void LoadedFile::drawShaderOverride() {
 	model->enableMaterials();
 }
 
-void LoadedFile::drawBoundingBoxOverride()
-{
+void LoadedFile::drawBoundingBoxOverride() {
+	ofScale(-1, -1, 1);
+
 	ofMesh* aggregateMesh = new ofMesh();
 
 	for (int i = 0; i < model->getMeshCount(); i++) {

@@ -5,10 +5,6 @@ void CylinderPrimitive::drawWireframeOverride()
 	cylinder->draw(OF_MESH_WIREFRAME);
 }
 
-void CylinderPrimitive::drawSolidOverride() {
-	cylinder->draw();
-}
-
 void CylinderPrimitive::drawShaderOverride() {
 	cylinder->draw();
 }

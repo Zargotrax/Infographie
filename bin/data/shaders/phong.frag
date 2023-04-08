@@ -63,7 +63,7 @@ void main() {
 
     vec3 l_projectorLight = normalize(projectorLight.position - vPosition);
     float reflection_diffuse_projectorLight = max(dot(n, l_projectorLight), 0.0);
-    float angle = degrees(acos(dot(-l_projectorLight, normalize(projectorLight.direction))));
+    float angle = degrees(acos(dot(-l_projectorLight, normalize(-projectorLight.direction))));
     float attenuation = smoothstep(projectorLight.outerCutoffAngle, projectorLight.cutoffAngle, angle);
     vec3 projectedColor = projectorLight.color * attenuation;
     vec3 r_projectorLight = reflect(-l_projectorLight, n);

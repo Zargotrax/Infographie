@@ -22,9 +22,6 @@ void Curve::drawWireframeOverride() {
 	ofPopStyle();
 }
 
-void Curve::drawSolidOverride() {
-}
-
 void Curve::drawShaderOverride() {
 }
 

@@ -4,8 +4,6 @@ void Renderer3d::setup()
 {
 	scene = new Scene();
 	camera = new ofEasyCam();
-	camera->setOrientation(glm::vec3(0, -0.042612, -1));
-	camera->setPosition(50, 50, 300);
 
 	toneMapping = new ofShader();
 	toneMapping->load("shaders/tone_mapping_330_vs.glsl", "shaders/tone_mapping_330_fs.glsl");
@@ -21,6 +19,21 @@ void Renderer3d::setup()
 
 	pbr = new ofShader();
 	pbr->load("shaders/pbr_330_vs.glsl", "shaders/pbr_330_fs.glsl");
+
+	ambiantLight.color = ofColor::black;
+	pointLight.position = ofVec3f(- 200, 200, 200);
+	pointLight.brightness = 40;
+	pointLight.color = ofColor::white;
+	directionalLight.position = ofVec3f(200, 200, 200);
+	directionalLight.direction = ofVec3f(1, 1, 1);
+	directionalLight.color = ofColor::darkGreen;
+	directionalLight.brightness = 40;
+	spotLight.position = ofVec3f(-200, -200, -200);
+	spotLight.brightness = 40;
+	spotLight.direction = ofVec3f(-1, -1, -1);
+	spotLight.color = ofColor::blueSteel;
+	spotLight.innerCutoff = 10;
+	spotLight.outerCutoff = 20;
 }
 
 void Renderer3d::update() {
@@ -33,33 +46,42 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 
 	camera->begin();
 
-	if (renderMode != Renderer3d::RenderMode::Wireframe) {
+	if (renderMode != RenderMode::Wireframe) {
 		ofEnableDepthTest();
 		ofEnableLighting();
+	}
+	if (renderMode == RenderMode::Lambert or renderMode == RenderMode::Phong or renderMode == RenderMode::Blinn_Phong) {
+		ofSetColor(pointLight.color);
+		ofDrawSphere(pointLight.position, 20);
+		ofSetColor(directionalLight.color);
+		ofDrawSphere(directionalLight.position, 20);
+		ofSetColor(spotLight.color);
+		ofDrawSphere(spotLight.position, 20);
+		ofSetColor(ofColor::white);
 	}
 
 	for (Object* object : scene->objects) {
 
 		switch (renderMode) {
-			case Renderer3d::RenderMode::Wireframe :
+			case RenderMode::Wireframe :
 				ofSetColor(ofColor::black);
 				object->drawWireframe();
 				ofSetColor(ofColor::white);
 			break;
-			case Renderer3d::RenderMode::Texture:
+			case RenderMode::Texture:
 				object->drawTexture(toneMapping);
 			break;
-			case Renderer3d::RenderMode::Lambert:
-				object->drawShader(lambert);
+			case RenderMode::Lambert:
+				object->drawShader(lambert, ambiantLight, pointLight, directionalLight, spotLight);
 			break;
-			case Renderer3d::RenderMode::Phong:
-				object->drawShader(phong);
+			case RenderMode::Phong:
+				object->drawShader(phong, ambiantLight, pointLight, directionalLight, spotLight);
 			break;
-			case Renderer3d::RenderMode::Blinn_Phong:
-				object->drawShader(blinnPhong);
+			case RenderMode::Blinn_Phong:
+				object->drawShader(blinnPhong, ambiantLight, pointLight, directionalLight, spotLight);
 			break;
-			case Renderer3d::RenderMode::PBR:
-				object->drawShader(blinnPhong);
+			case RenderMode::PBR:
+				object->drawPBR(pbr, pointLight, directionalLight, spotLight);
 				break;
 		}
 

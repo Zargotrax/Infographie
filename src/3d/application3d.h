@@ -91,6 +91,10 @@ public:
 
 	void onImportOcclusionMapEvent(ofxDatGuiButtonEvent e);
 
+	void onLightColorChangeEvent(ofxDatGuiColorPickerEvent e);
+
+	void onLightBrightnessChangeEvent(ofxDatGuiSliderEvent e);
+
 private:
 
 	void import(string path);

@@ -8,9 +8,6 @@ void CustomObject::drawWireframeOverride() {
 	}
 }
 
-void CustomObject::drawSolidOverride() {
-}
-
 void CustomObject::drawShaderOverride() {
 }
 

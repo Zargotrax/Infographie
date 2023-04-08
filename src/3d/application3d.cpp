@@ -9,6 +9,9 @@ bool isSPressed = false;
 bool isDPressed = false;
 bool isQPressed = false;
 bool isEPressed = false;
+bool is1Pressed = false;
+bool is2Pressed = false;
+bool is3Pressed = false;
 
 ofImage* downloadCursor;
 
@@ -48,6 +51,13 @@ ofxDatGuiSlider* materialBrightnessSlider;
 ofxDatGuiColorPicker* materialFresnelIorColorPicker;
 
 ofxDatGui* lightMenu;
+ofxDatGuiColorPicker* ambiantLightColor;
+ofxDatGuiColorPicker* pointLightColor;
+ofxDatGuiColorPicker* directionalLightColor;
+ofxDatGuiColorPicker* spotLightColor;
+ofxDatGuiSlider* pointLightBrightness;
+ofxDatGuiSlider* directionalLightBrightness;
+ofxDatGuiSlider* spotLightBrightness;
 
 ofxDatGui* curveMenu;
 ofxDatGuiDropdown* curvePointControlDropdown;
@@ -113,7 +123,7 @@ void Application3d::setup(ofxDatGui* header)
 	selectionScrollView->setPosition(objectMenu->getWidth(), headerUi->getHeight() - 1);
 	selectionScrollView->setOpacity(0.1);
 
-	transformationMenu = new ofxDatGui(850, 250);
+	transformationMenu = new ofxDatGui(950, 200);
 	transformationMenu->addHeader("Transformation Menu");
 	transformationMenu->addFooter();
 	vector<string> transformationOptions = {"Translation", "Rotation", "Proportion"};
@@ -124,7 +134,7 @@ void Application3d::setup(ofxDatGui* header)
 	ofxDatGuiButton* applyButton = transformationMenu->addButton("Apply");
 	applyButton->onButtonEvent(this, &Application3d::onApplyTransformationEvent);
 
-	textureMenu = new ofxDatGui(850, 460);
+	textureMenu = new ofxDatGui(950, 400);
 	textureMenu->addHeader("Texture Menu");
 	textureMenu->addFooter();
 	ofxDatGuiButton* textureImportBtn = textureMenu->addButton("Import Diffuse Texture");
@@ -151,7 +161,7 @@ void Application3d::setup(ofxDatGui* header)
 	gammaSlider = textureMenu->addSlider("Gamma", 0, 5, 2.2);
 	gammaSlider->onSliderEvent(this, &Application3d::onToneMappingEvent);
 
-	materialMenu = new ofxDatGui(50, 550);
+	materialMenu = new ofxDatGui(50, 430);
 	materialMenu->addHeader("Material Menu");
 	ofxDatGuiFolder* colorFolder = materialMenu->addFolder("Color");
 	materialAmbiantCP = colorFolder->addColorPicker("Ambiant", ofFloatColor(0.1, 0.1, 0.1));
@@ -161,33 +171,40 @@ void Application3d::setup(ofxDatGui* header)
 	materialSpecularCP = colorFolder->addColorPicker("Specular", ofFloatColor(1.0, 0.0, 1.0));
 	materialSpecularCP->onColorPickerEvent(this, &Application3d::onMaterialColorChangeEvent);
 	ofxDatGuiFolder* factorFolder = materialMenu->addFolder("Factor");
-	ofxDatGuiSlider* materialMetallicSlider = factorFolder->addSlider("Metallic", 0, 1, 0.5);
+	materialMetallicSlider = factorFolder->addSlider("Metallic", 0, 1, 0.5);
 	materialMetallicSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
-	ofxDatGuiSlider* materialRoughnessSlider = factorFolder->addSlider("Roughness", 0, 1, 0.5);
+	materialRoughnessSlider = factorFolder->addSlider("Roughness", 0, 1, 0.5);
 	materialRoughnessSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
-	ofxDatGuiSlider* materialOcclusionSlider = factorFolder->addSlider("Occlusion", 0, 5, 1);
+	materialOcclusionSlider = factorFolder->addSlider("Occlusion", 0, 5, 1);
 	materialOcclusionSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
-	ofxDatGuiSlider* materialBrightnessSlider = factorFolder->addSlider("Brightness", 0, 5, 1);
+	materialBrightnessSlider = factorFolder->addSlider("Brightness", 0, 5, 1);
 	materialBrightnessSlider->onSliderEvent(this, &Application3d::onMaterialFactorChangeEvent);
-	ofxDatGuiColorPicker* materialFresnelIorColorPicker = materialMenu->addColorPicker("Fresnel IOR");
+	materialFresnelIorColorPicker = materialMenu->addColorPicker("Fresnel IOR");
 	materialFresnelIorColorPicker->onColorPickerEvent(this, &Application3d::onMaterialFactorIorChangeEvent);
 	materialMenu->addFooter();
 
-	lightMenu = new ofxDatGui(50, 430);
+	lightMenu = new ofxDatGui(650, 550);
 	lightMenu->addHeader("Light Menu");
 	ofxDatGuiFolder* ambiantLightFolder = lightMenu->addFolder("Ambiant Light");
-	ambiantLightFolder->addColorPicker("Color");
+	ambiantLightColor = ambiantLightFolder->addColorPicker("Color", renderer.ambiantLight.color);
+	ambiantLightColor->onColorPickerEvent(this, &Application3d::onLightColorChangeEvent);
 	ofxDatGuiFolder* pointLightFolder = lightMenu->addFolder("Point Light");
-	pointLightFolder->addColorPicker("Color");
-	pointLightFolder->addSlider("Brightness", 0, 1, 1);
+	pointLightColor = pointLightFolder->addColorPicker("Color", renderer.pointLight.color);
+	pointLightColor->onColorPickerEvent(this, &Application3d::onLightColorChangeEvent);
+	pointLightBrightness = pointLightFolder->addSlider("Brightness", 0, 64, 40);
+	pointLightBrightness->onSliderEvent(this, &Application3d::onLightBrightnessChangeEvent);
 	ofxDatGuiFolder* directionalLightFolder = lightMenu->addFolder("Directional Light");
-	directionalLightFolder->addColorPicker("Color");
-	directionalLightFolder->addSlider("Brightness", 0, 1, 1);
-	ofxDatGuiFolder* projectorLightFolder = lightMenu->addFolder("Projector Light");
-	directionalLightFolder->addColorPicker("Color");
-	directionalLightFolder->addSlider("Brightness", 0, 1, 1);
+	directionalLightColor = directionalLightFolder->addColorPicker("Color", renderer.directionalLight.color);
+	directionalLightColor->onColorPickerEvent(this, &Application3d::onLightColorChangeEvent);
+	directionalLightBrightness = directionalLightFolder->addSlider("Brightness", 0, 64, 40);
+	directionalLightBrightness->onSliderEvent(this, &Application3d::onLightBrightnessChangeEvent);
+	ofxDatGuiFolder* spotLightFolder = lightMenu->addFolder("Spot Light");
+	spotLightColor = spotLightFolder->addColorPicker("Color", renderer.spotLight.color);
+	spotLightColor->onColorPickerEvent(this, &Application3d::onLightColorChangeEvent);
+	spotLightBrightness = spotLightFolder->addSlider("Brightness", 0, 64, 40);
+	spotLightBrightness->onSliderEvent(this, &Application3d::onLightBrightnessChangeEvent);
 
-	curveMenu = new ofxDatGui(50, 350);
+	curveMenu = new ofxDatGui(330, 550);
 	curveMenu->addHeader("Bezier Curve Menu");
 	vector<string> curveControlPoints = { "1", "2", "3", "4" };
 	curvePointControlDropdown = curveMenu->addDropdown("Control Point", curveControlPoints);
@@ -198,7 +215,7 @@ void Application3d::setup(ofxDatGui* header)
 	curveZSlider = curveMenu->addSlider("Position Z", -500, 500, 0);
 	curveZSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
 
-	surfaceMenu = new ofxDatGui(50, 350);
+	surfaceMenu = new ofxDatGui(330, 550);
 	surfaceMenu->addHeader("Bezier Surface Menu");
 	vector<string> surfaceControlPoints = { "0", "1", "2", "3", "4", "5", "6", "7", "8"};
 	surfacePointControlDropdown = surfaceMenu->addDropdown("Control Point", surfaceControlPoints);
@@ -293,7 +310,21 @@ void Application3d::update() {
 	if (isEPressed)
 		renderer.camera->boom(-5);
 
-
+	Light* lightToMove;
+	if (is1Pressed)
+		lightToMove = &renderer.pointLight;
+	if (is2Pressed)
+		lightToMove = &renderer.directionalLight;
+	if (is3Pressed)
+		lightToMove = &renderer.spotLight;
+	if (is1Pressed or is2Pressed or is3Pressed) {
+		ofVec3f worldMouse = renderer.camera->screenToWorld(ofVec3f(ofGetMouseX(), ofGetMouseY(), 0));
+		ofVec3f direction = worldMouse - renderer.camera->getPosition();
+		direction.normalize();
+		glm::vec3 newPoint = renderer.camera->getPosition() + direction * 500;
+		lightToMove->position = newPoint;
+		lightToMove->direction = newPoint;
+	}
 }
 
 void Application3d::showUi() {
@@ -329,6 +360,12 @@ void Application3d::keyPressed(int key) {
 		isQPressed = true;
 	if (key == 101) // e
 		isEPressed = true;
+	if (key == 49) // 1
+		is1Pressed = true;
+	if (key == 50) // 2
+		is2Pressed = true;
+	if (key == 51) // 3
+		is3Pressed = true;
 }
 
 void Application3d::keyReleased(int key) {
@@ -346,6 +383,12 @@ void Application3d::keyReleased(int key) {
 		isQPressed = false;
 	if (key == 101) // e
 		isEPressed = false;
+	if (key == 49) // 1
+		is1Pressed = false;
+	if (key == 50) // 2
+		is2Pressed = false;
+	if (key == 51) // 3
+		is3Pressed = false;
 }
 
 void Application3d::mousePressed(int x, int y, int button) {
@@ -777,6 +820,19 @@ void Application3d::onImportOcclusionMapEvent(ofxDatGuiButtonEvent e) {
 	else {
 		ofLog() << "<app::import - failed>";
 	}
+}
+
+void Application3d::onLightColorChangeEvent(ofxDatGuiColorPickerEvent e) {
+	renderer.ambiantLight.color = ambiantLightColor->getColor();
+	renderer.pointLight.color = pointLightColor->getColor();
+	renderer.directionalLight.color = directionalLightColor->getColor();
+	renderer.spotLight.color = spotLightColor->getColor();
+}
+
+void Application3d::onLightBrightnessChangeEvent(ofxDatGuiSliderEvent e) {
+	renderer.pointLight.brightness = pointLightBrightness->getValue();
+	renderer.directionalLight.brightness = directionalLightBrightness->getValue();
+	renderer.spotLight.brightness = spotLightBrightness->getValue();
 }
 
 void Application3d::import(string path) {

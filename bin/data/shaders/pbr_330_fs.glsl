@@ -48,6 +48,9 @@ uniform float tone_mapping_gamma;
 // texture diffuse
 uniform sampler2D texture_diffuse;
 
+// texture normale
+uniform sampler2D texture_normale;
+
 // texture métallique
 uniform sampler2D texture_metallic;
 
@@ -126,7 +129,8 @@ vec3 tone_mapping_aces_filmic(vec3 x)
 vec3 brdf_cook_torrance()
 {
   // re-normaliser la normale après interpolation
-  vec3 n = normalize(surface_normal);
+  //vec3 n = normalize(surface_normal);
+  vec3 n = normalize(normalize(surface_normal) + texture(texture_normale, surface_texcoord).rgb);
 
   // calculer la direction de la surface vers la lumière (l)
   vec3 l = normalize(light_position - surface_position);
