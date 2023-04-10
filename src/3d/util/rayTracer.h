@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include <scene.h>
-//#include "object/scene.h"
 
 class RayTracer {
 public:

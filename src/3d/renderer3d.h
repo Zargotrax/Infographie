@@ -1,13 +1,16 @@
 #include "ofMain.h"
 #include "object/scene.h"
 #include "./object/light.h"
+#include "./3d/util/tess.h"
 
 class Renderer3d
 {
 public:
 
-	enum RenderMode { Wireframe, Texture, Lambert, Phong, Blinn_Phong, PBR };
+	enum RenderMode { Wireframe, Texture, Lambert, Phong, Blinn_Phong, PBR, Tesselation };
 	enum CameraMode { Perspective, Orthographic};
+
+	TesselatorUtil* tesselator;
 
 	ofEasyCam* camera;
 	CameraMode cameraMode = Perspective;

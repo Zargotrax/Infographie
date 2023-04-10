@@ -19,11 +19,12 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 --18. when adding a cylinder the menu turns black--
 --19. investigate memory leak--
 
-20. Applying filtering to a png texture with transparency isnt working
-21. white wireframe? check shaders
+--20. Applying filtering to a png texture with transparency isnt working--
+--21. white wireframe? check shaders--
 22. textures on teapot?
-23. lambert missing spotlight
+--23. lambert missing spotlight--
 24. naming is wrong when adding multiple object with the same name
 25. cant change the light color with the material menu
-26. add brrightness to directional light in shaders
-27. loaded models are upside down
+--26. add brrightness to directional light in shaders--
+--27. loaded models are upside down--
+28. texture shader not working

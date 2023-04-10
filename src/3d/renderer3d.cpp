@@ -34,21 +34,28 @@ void Renderer3d::setup()
 	spotLight.color = ofColor::blueSteel;
 	spotLight.innerCutoff = 10;
 	spotLight.outerCutoff = 20;
+
+	tesselator = new TesselatorUtil();
+	tesselator->setup();
 }
 
 void Renderer3d::update() {
 
 }
 
-void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selected)
-{
+void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selected) {
 	ofPushStyle();
+
+	if (renderMode == RenderMode::Tesselation) {
+		tesselator->draw();
+		ofPopStyle();
+		return;
+	}
 
 	camera->begin();
 
 	if (renderMode != RenderMode::Wireframe) {
 		ofEnableDepthTest();
-		ofEnableLighting();
 	}
 	if (renderMode == RenderMode::Lambert or renderMode == RenderMode::Phong or renderMode == RenderMode::Blinn_Phong) {
 		ofSetColor(pointLight.color);
@@ -92,7 +99,6 @@ void Renderer3d::draw(Renderer3d::RenderMode renderMode, vector<Object*> selecte
 
 	camera->end();
 	ofDisableDepthTest();
-	ofDisableLighting();
 	ofPopStyle();
 }
 

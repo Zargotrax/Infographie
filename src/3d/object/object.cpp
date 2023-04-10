@@ -153,7 +153,7 @@ void Object::drawPBR(ofShader* shader, Light pointLight, Light directionalLight,
 	if (occlusionMap.isAllocated())
 		shader->setUniformTexture("texture_occlusion", occlusionMap, 4);
 
-	shader->setUniform1f("light_intensity", pointLight.brightness);
+	shader->setUniform1f("light_intensity", pointLight.brightness/64);
 	ofFloatColor lightColor = ofFloatColor(pointLight.color);
 	shader->setUniform3f("light_color", lightColor.r, lightColor.g, lightColor.b);
 	shader->setUniform3f("light_position", pointLight.position);

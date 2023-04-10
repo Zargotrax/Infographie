@@ -91,7 +91,7 @@ void Application3d::setup(ofxDatGui* header)
 	undoBtn->onButtonEvent(this, &Application3d::onUndoEvent);
 	ofxDatGuiButton* redoBtn = objectMenu->addButton("Redo");
 	redoBtn->onButtonEvent(this, &Application3d::onRedoEvent);	
-	vector<string> renderModeOptions = { "Wireframe", "Texture", "Lambert", "Phong", "Blinn-Phong", "PBR"};
+	vector<string> renderModeOptions = { "Wireframe", "Tesselation", "Texture", "Lambert", "Phong", "Blinn-Phong", "PBR"};
 	renderModeDropdown = objectMenu->addDropdown("Render Mode", renderModeOptions);
 	ofxDatGuiButton* addCylinderBtn = objectMenu->addButton("Add Cylinder");
 	addCylinderBtn->onButtonEvent(this, &Application3d::onAddCylinderEvent);
@@ -239,9 +239,11 @@ void Application3d::draw() {
 		img.save(filename);
 	}
 
-	objectScrollView->draw(); 
+	objectScrollView->draw(); // Dont touch, it works...
+	objectScrollView->draw();
 	selectionScrollView->setHeight(selectionScrollView->getNumItems() * 26);
 	selectionScrollView->draw();
+
 	if (!selection.empty()) {
 		if (dynamic_cast<Curve*>(selection.at(0)) != nullptr) {
 			curveMenu->setVisible(true);
@@ -258,7 +260,6 @@ void Application3d::draw() {
 
 	float x = static_cast<float>(ofGetMouseX());
 	float y = static_cast<float>(ofGetMouseY());
-
 	if (exporting) {
 		ofHideCursor();
 		downloadCursor->draw(x - (downloadCursor->getWidth() / 2), y - (downloadCursor->getWidth() / 2));
@@ -334,6 +335,7 @@ void Application3d::showUi() {
 	materialMenu->setVisible(true);
 	curveMenu->setVisible(true);
 	surfaceMenu->setVisible(true);
+	lightMenu->setVisible(true);
 }
 
 void Application3d::hideUi() {
@@ -343,6 +345,7 @@ void Application3d::hideUi() {
 	materialMenu->setVisible(false);
 	curveMenu->setVisible(false);
 	surfaceMenu->setVisible(false);
+	lightMenu->setVisible(false);
 }
 
 void Application3d::keyPressed(int key) {
@@ -914,6 +917,8 @@ void Application3d::redo() {
 
 Renderer3d::RenderMode Application3d::getRenderMode() {
 	string renderMode = renderModeDropdown->getSelected()->getLabel();
+	if (renderMode == "Tesselation")
+		return Renderer3d::RenderMode::Tesselation;
 	if (renderMode == "Wireframe")
 		return Renderer3d::RenderMode::Wireframe;
 	if (renderMode == "Texture")

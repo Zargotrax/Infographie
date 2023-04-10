@@ -131,9 +131,6 @@ bool rayIntersectsBox(const Ray& ray, const ofPoint& min, const ofPoint& max) {
     return t_max >= t_min;
 }
 
-//vector<Vector> vertex;
-//vector<Vector> edge1;
-//vector<Vector> edge2;
 struct Model : Element {
     ofMesh mesh;
     ofPoint min;
@@ -202,7 +199,6 @@ struct Model : Element {
             if (distance < minDistance) {
                 minDistance = distance;
                 normale = (ray.origin + ray.direction * distance - position).normalize();
-                //normale = Vector(face.getFaceNormal().x, face.getFaceNormal().y, face.getFaceNormal().z);
             }
         }
         return Intersection(minDistance, normale);
@@ -579,22 +575,10 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
     scene.push_back(&Sphere(wall_radius, Vector(-anchor + 50, 0, 0), Vector(), Vector(0.25, 0.25, 0.75), SurfaceType::diffuse));    // mur droit
     scene.push_back(&Sphere(wall_radius, Vector(0, 0, anchor + 250), Vector(), Vector((0.25, 0.75, 0.75)), SurfaceType::diffuse));    // mur avant
 
-
-
-    //scene.push_back(&Sphere(20, Vector(-25, -10, 20), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
     scene.push_back(&Sphere(20, Vector(-25, -10, 20), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
-    scene.push_back(&Sphere(20, Vector(25, 15, -10), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
-    //scene.push_back(&Cube(40, Vector(), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
+    scene.push_back(&Cube(35, Vector(25, 15, -10), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::specular));
     scene.push_back(&Sphere(20, Vector(0, 60, 20), Vector(15, 15, 15), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
     scene.push_back(&Sphere(20, Vector(0, -25, 250), Vector(15, 15, 15), Vector(1.0, 1.0, 1.0), SurfaceType::diffuse));
-
-    //scene.push_back(&Sphere(3, Vector(0, 0, 0), Vector(1, 1, 1), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
-
-    //scene.push_back(&Cube(50, Vector(75, 40, 75), Vector(), Vector(1.0, 1.0, 1.0), SurfaceType::refraction));
-    //scene.push_back(&Triangle(Vector(80, 40, 75), Vector(70, 40, 75), Vector(70, 40, 75), Vector(), Vector(), Vector(1, 0, 1), SurfaceType::diffuse));
-    //scene.push_back(&Model(Vector(75, 40, 25), Vector(0, 0, 0), Vector(1, 0, 1), SurfaceType::refraction));
-
-    //scene.push_back(&Sphere(600, Vector(box_center_x, 600.0 + box_size_z - 0.27, box_size_z), Vector(15, 15, 15), Vector(0.0, 0.0, 0.0), SurfaceType::diffuse)); // sphère lumineuse
 
     for (Object* obj : sc->objects) {
         if (dynamic_cast<LoadedFile*>(obj) != nullptr) {
@@ -608,7 +592,7 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
 
             Model* model = new Model(loadedFile->model->getMesh(0),
                 loadedFile->model->getSceneMin(), loadedFile->model->getSceneMax(), trans,
-                Vector(0, 0, 50), Vector(), Vector(1, 1, 1), SurfaceType::refraction);
+                Vector(0, 0, 50), Vector(), Vector(1, 1, 1), SurfaceType::diffuse);
             scene.push_back(model);
         }
 
@@ -619,16 +603,9 @@ void RayTracer::run(ofCamera* cam, Scene* sc) {
 
     std::cout << "image resize to " << image.width << "x" << image.height << " (" << image.count << " pixels, " << image.size << " MB)" << std::endl;
 
-    // calibration de la caméra
-    //camera.viewport_width = image.width;
-    //camera.viewport_height = image.height;
-    //camera.fov = camera_fov;
-
     Vector camera_orientation(Vector(0, -0.042612, -1).normalize());
     constexpr Vector camera_position(0, 0, 300);
 
-    //Camera camera(Vector(cam->getPosition().x, cam->getPosition().y, cam->getPosition().z),
-    //    Vector(cam->getLookAtDir().x, cam->getLookAtDir().y, cam->getLookAtDir().z));
     Camera camera = Camera(camera_position, camera_orientation);
     camera.viewport_width = image.width;
     camera.viewport_height = image.height;
