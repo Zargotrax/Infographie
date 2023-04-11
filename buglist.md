@@ -27,4 +27,7 @@ alors cette dernière change de couleur alors qu'elle ne devrait pas
 25. cant change the light color with the material menu
 --26. add brrightness to directional light in shaders--
 --27. loaded models are upside down--
-28. texture shader not working
+29. spotligght artefacts
+30. material menu with lighting model
+--31. ajouter pts de ccontrol courbe bezier--
+--32. ambiant material color???--

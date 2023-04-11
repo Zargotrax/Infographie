@@ -33,7 +33,7 @@ void Renderer3d::setup()
 	spotLight.direction = ofVec3f(-1, -1, -1);
 	spotLight.color = ofColor::blueSteel;
 	spotLight.innerCutoff = 10;
-	spotLight.outerCutoff = 20;
+	spotLight.outerCutoff = 15;
 
 	tesselator = new TesselatorUtil();
 	tesselator->setup();

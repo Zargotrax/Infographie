@@ -6,7 +6,7 @@ public:
 
 	ofPolyline* polyline;
 
-	ofPoint controlPoints[4] = {ofPoint(-200, 0, 0), ofPoint(-200, 100, 0), ofPoint(200, 100, 0), ofPoint(200, 0, 0)};
+	ofPoint controlPoints[5] = {ofPoint(-200, 0, 0), ofPoint(-200, 100, 0), ofPoint(0, 200, 0), ofPoint(200, 100, 0), ofPoint(200, 0, 0)};
 
 	void drawWireframeOverride();
 

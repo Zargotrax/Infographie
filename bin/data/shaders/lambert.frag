@@ -43,7 +43,7 @@ out vec4 fragColor;
 void main() {
     vec3 n = normalize(vNormal);
     vec3 v = normalize(vPosition);
-    fragColor = vec4(ambiant, 1);
+    fragColor = vec4(ambiant + material.ambiant, 1);
 
     vec3 l_pointLight = normalize(pointLight.position - vPosition);
     float reflection_diffuse_pointLight = max(dot(n, l_pointLight), 0.0);

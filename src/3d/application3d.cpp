@@ -206,7 +206,7 @@ void Application3d::setup(ofxDatGui* header)
 
 	curveMenu = new ofxDatGui(330, 550);
 	curveMenu->addHeader("Bezier Curve Menu");
-	vector<string> curveControlPoints = { "1", "2", "3", "4" };
+	vector<string> curveControlPoints = { "1", "2", "3", "4", "5"};
 	curvePointControlDropdown = curveMenu->addDropdown("Control Point", curveControlPoints);
 	curveXSlider = curveMenu->addSlider("Position X", -500, 500, 0);
 	curveXSlider->onSliderEvent(this, &Application3d::onCurveControlPointPositionChangeEvent);
@@ -851,7 +851,7 @@ void Application3d::import(string path) {
 		}
 		obj->originalName = filename;
 		filename = getElementName(filename);
-
+		obj->model->disableMaterials();
 		addObject(obj, filename);
 	} else {
 		ofLog() << "<app::import - failed>";

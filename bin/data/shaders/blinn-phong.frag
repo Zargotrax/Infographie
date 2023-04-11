@@ -43,7 +43,7 @@ out vec4 fragColor;
 void main() {
     vec3 n = normalize(vNormal);
     vec3 v = normalize(vPosition);
-    fragColor = vec4(ambiant, 1);
+    fragColor = vec4(ambiant + material.ambiant, 1);
 
     vec3 l_pointLight = normalize(pointLight.position - vPosition);
     float reflection_diffuse_pointLight = max(dot(n, l_pointLight), 0.0);
@@ -70,5 +70,4 @@ void main() {
     float reflection_specular_projectorLight = pow(max(dot(n, h_projectorLight), 0.0), projectorLight.brightness);
     fragColor += vec4(material.diffuse * reflection_diffuse_projectorLight * projectedColor +
         material.specular * reflection_specular_projectorLight * projectedColor, 1.0);
-
 }

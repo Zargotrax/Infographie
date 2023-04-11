@@ -12,18 +12,10 @@ ofxDatGuiLabel* headerLabel;
 
 ofxDatGuiFolder* viewMenuFolder;
 
-ofSpherePrimitive sphere;
-ofLight light;
-ofTexture mTex;
-ofEasyCam cam;
-
 // Gui setup /////////////////////////////////////////////////////////////////////////////////////////////////
 void Application::setup()
 {
     ofLog() << "<app::setup>";
-
-    ofSetColor(255);
-    ofLoadImage(mTex, "earth.jpg");
 
     ofSetWindowTitle("Projet Infographie");
     ofSetCircleResolution(50);

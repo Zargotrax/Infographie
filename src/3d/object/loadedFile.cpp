@@ -7,12 +7,7 @@ void LoadedFile::drawWireframeOverride() {
 
 void LoadedFile::drawShaderOverride() {
 	ofScale(-1, -1, 1);
-
-	model->disableMaterials();
-
-	model->drawFaces();
-
-	model->enableMaterials();
+	model->draw(OF_MESH_FILL);
 }
 
 void LoadedFile::drawBoundingBoxOverride() {
